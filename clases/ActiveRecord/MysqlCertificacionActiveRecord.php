@@ -153,8 +153,8 @@ class MysqlCertificacionActiveRecord implements ActiveRecord {
                 $oValueObject->setFechaFirma($fila->fechaFirma);
                 $aCertificacion[] = $oValueObject;
                 unset($oValueObject);
-                }
-                return $aCertificacion;
+            }
+            return $aCertificacion;
         } else {
             return FALSE;
         }

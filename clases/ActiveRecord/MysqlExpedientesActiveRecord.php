@@ -28,6 +28,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             $oValueObject = new ExpedientesValueObject();
             $oValueObject->setIdexpediente($fila->idexpediente);
             $oValueObject->setIdObra($fila->idObra);
+            $oValueObject->setIdTipo($fila->idTipo);
             $oValueObject->setCertNro($fila->certNro);
             $oValueObject->setCertDnv($fila->certDnv);
             $oValueObject->setExpDpv($fila->expDpv);
@@ -52,12 +53,13 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarTodo() {
         $sql = "SELECT * FROM expedientes;";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if(mysql_fetch_object($resultado)){
             $aExpedientes = array();
             while ($fila = mysql_fetch_object($resultado)){
                 $oExpedientes = new ExpedientesValueObject();
                 $oExpedientes->setIdexpediente($fila->idexpediente);
                 $oExpedientes->setIdObra($fila->idObra);
+                $oExpedientes->setIdTipo($fila->idTipo);
                 $oExpedientes->setCertNro($fila->certNro);
                 $oExpedientes->setCertDnv($fila->certDnv);
                 $oExpedientes->setExpDpv($fila->expDpv);
@@ -91,6 +93,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             $oValueObject = new ExpedientesValueObject();
             $oValueObject->setIdexpediente($fila->idexpediente);
             $oValueObject->setIdObra($fila->idObra);
+            $oValueObject->setIdTipo($fila->idTipo);
             $oValueObject->setCertNro($fila->certNro);
             $oValueObject->setCertDnv($fila->certDnv);
             $oValueObject->setExpDpv($fila->expDpv);
@@ -107,6 +110,78 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
+    
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
+    public function buscarPorObra($oValueObject) {
+        $sql = "SELECT * FROM expedientes WHERE idObra = " . $oValueObject->getIdObra() . ";";
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $aExpedientes = array();
+            while ($fila = mysql_fetch_object($resultado)){
+                $oValueObject = new ExpedientesValueObject();
+                $oValueObject->setIdexpediente($fila->idexpediente);
+                $oValueObject->setIdObra($fila->idObra);
+                $oValueObject->setIdTipo($fila->idTipo);
+                $oValueObject->setCertNro($fila->certNro);
+                $oValueObject->setCertDnv($fila->certDnv);
+                $oValueObject->setExpDpv($fila->expDpv);
+                $oValueObject->setExpDnv($fila->expDnv);
+                $oValueObject->setMes($fila->mes);
+                $oValueObject->setComentario($fila->comentario);
+                $oValueObject->setImporte($fila->importe);
+                $oValueObject->setVencimiento($fila->vencimiento);
+                $oValueObject->setCedido($fila->cedido);
+                $oValueObject->setFinalizado($fila->finalizado);
+                $oValueObject->setFechaFirma($fila->fechaFirma);
+                $aExpedientes[] = $oValueObject;
+                unset($oValueObject);
+            }
+            return $aExpedientes;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
+    public function buscarNoFinalizados() {
+        $sql = "SELECT * FROM expedientes WHERE finalizado = 'N' "
+                . "ORDER BY idObra, idexpediente;";
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $aExpedientes = array();
+            while ($fila = mysql_fetch_object($resultado)){
+                $oExpedientes = new ExpedientesValueObject();
+                $oExpedientes->setIdexpediente($fila->idexpediente);
+                $oExpedientes->setIdObra($fila->idObra);
+                $oExpedientes->setIdTipo($fila->idTipo);
+                $oExpedientes->setCertNro($fila->certNro);
+                $oExpedientes->setCertDnv($fila->certDnv);
+                $oExpedientes->setExpDpv($fila->expDpv);
+                $oExpedientes->setExpDnv($fila->expDnv);
+                $oExpedientes->setMes($fila->mes);
+                $oExpedientes->setComentario($fila->comentario);
+                $oExpedientes->setImporte($fila->importe);
+                $oExpedientes->setVencimiento($fila->vencimiento);
+                $oExpedientes->setCedido($fila->cedido);
+                $oExpedientes->setFinalizado($fila->finalizado);
+                $oExpedientes->setFechaFirma($fila->fechaFirma);
+                $aExpedientes[] = $oExpedientes;
+                unset($oExpedientes);
+            }
+            return $aExpedientes;
+        } else {
+            return false;
+        }
+    }
+    
     public function contar() {
         
     }

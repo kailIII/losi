@@ -9,23 +9,16 @@ $oMysql->conectar();
 * la cantidad de obras que hay en la base.
 */
 
-$oMysqlExpediente = $oMysql->getExpedienteActiveRecord();
+$oMysqlExpediente = $oMysql->getExpedientesActiveRecord();
+$oExpedientes = new ExpedientesValueObject();
+$oExpedientes = $oMysqlExpediente->buscarNoFinalizados();
 
-/* Busco los expediente.idCertificacion y los agrego a una lista para 
-* poder buscar los nombres de las obras y poder recorrerlo. */
-$oExpedientes = $oMysqlExpediente->buscarIdCertificaciones();
-$lista = '';
-foreach ($oExpedientes as $expediente) {
-   $lista .= $expediente->getIdCertificacion().',';
+if(count($oExpedientes) == 0){
+    return false;
 }
-$lista = substr($lista, 0, strlen($lista)-1);
-$lista = explode(',', $lista);
-/* En $lista poseo los idCertificacion. */
 
 $oMysqlObra = $oMysql->getObrasEjecutadasActiveRecord();
-$oMysqlCertificacion = $oMysql->getCertificacionActiveRecord();
-include_once '../clases/ValueObject/CertificacionValueObject.php';
-$oCertificacion = new CertificacionValueObject();
+
 
 /* Cargo todas las dependencias para poder consultarlas cuando necesite. */
 $dependencia = array();
@@ -42,19 +35,29 @@ foreach ($oDependencia as $auxDep) {
     }
 }
 $totalfinal = 0;
+$nuevo = true;
 ?>
 <div class="col-lg-12">
     <?php
-    foreach($lista as $lista_){
+    if(!$oExpedientes){
+        ?>
+        <div class="form-group has-error">
+            <div class="col-xs6">
+                <input type="text" value="No se encotraron datos para mostrar" class="form-control">
+                <span class="input-icon"></span>
+            </div>
+        </div>
+    <?php
+        return;
+    }
+    
+    foreach($oExpedientes as $llave => $aExpedientes){
         /* Busco el nombre de la obra. */
-        $oCertificacion->setId($lista_);
-        $oCertificacion = $oMysqlCertificacion->buscar($oCertificacion);
-
         unset($oObra);
         $oObra = new ObrasEjecutadasValueObject();
-        $oObra->setID($oCertificacion->getIdObra());
+        $oObra->setID($aExpedientes->getIdObra());
         $oObra = $oMysqlObra->buscar($oObra);
-
+        if($nuevo){
         ?>
         <table class="table table-striped table-bordered table-hover">
             <tr>
@@ -67,108 +70,110 @@ $totalfinal = 0;
                 <th>Expediente DPV</th>
                 <th>Mes</th>
                 <th>Dependencia</th>
-                <!--<th>Comentario</th>-->
                 <th>Importe</th>
                 <th>Vto.</th>
                 <th>Restante&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                 <th></th>
-                <!--<th>Cedido</th>-->
             </tr>
             <?php
-            unset($oExpediente);
-            $oExpediente = new ExpedienteValueObject();
-            $oExpediente->setIdCertificacion($lista_);
-            $oExpediente = $oMysqlExpediente->buscarPorCertificacion($oExpediente);
             $total = 0;
-            foreach ($oExpediente as $expe) {
-                unset($oExpediente1);
-                $oExpediente1 = new ExpedienteValueObject();
-                $oExpediente1->setIdexpediente($expe->getIdexpediente());
-                $oExpediente1 = $oMysqlExpediente->buscarPorExpediente($oExpediente1);
-                /* Muestro los datos del expediente en las tablas correspondientes.
-                 * Se busca en el historico el lugar acutal del expediente.
-                 * Si no se encuentra se carga la fecha actual del sistema
-                 * y se informa con dependencia desconocida.
-                 */
-                foreach ($oExpediente1 as $expediente) {
-                    unset($oMysqlExpHistoria);
-                    unset($oExpHistoria);
-                    $oMysqlExpHistoria = $oMysql->getExpHistotiaActiveRecord();
-                    $oExpHistoria = new ExpHistoriaValueObject();
-                    $oExpHistoria->setIdexpediente($expe->getIdexpediente());
-                    $oExpHistoria = $oMysqlExpHistoria->buscar($oExpHistoria);
-                    if($oExpHistoria){
-                        $diaTabla = new DateTime($oExpHistoria[0]->getFecha());
-                        $dependenciaActual = $oExpHistoria[0]->getDependencia();
-                        $orden_ = $dependencia[$dependenciaActual][1];
-                    } else {
-                        $diaTabla = new DateTime(date('Y-m-d'));
-                        $dependenciaActual = 9999;
-                        $orden_ = 0;
-                    }
-                    $diaHoy = new DateTime(date('Y-m-d'));
-                    $dias = $diaTabla->diff($diaHoy);
-                    ?>
-                    <tr ondblclick="javascript:window.location.href='../historiaCertificado/<?php echo $expediente->getIdexpediente(); ?>';">
-                        <td><?php echo $expediente->getCertDpv(); ?></td>
-                        <td><?php echo $expediente->getCertDnv(); ?></td>
-                        <td><?php echo $expediente->getExpDnv(); ?></td>
-                        <td><?php echo $expediente->getExpDpv(); ?></td>
-                        <td><?php echo $expediente->getMes(); ?></td>
-                        <!--<td><?php // echo $expediente->getDependencia(); ?></td>-->
-                        <td><?php echo $dependencia[$dependenciaActual][0]; ?></td>
-                        <!--<td><?php // echo $expediente->getComentario(); ?></td>-->
-                        <td>$ <?php echo $expediente->getImporte(); $total += $expediente->getImporte(); ?></td>
-                        <td><?php echo $expediente->getVencimiento(); ?></td>
-                        <?php if ((($dias->format('%a')*100)/7)<50) $progreso = 'progress-bar-susses'; ?>
-                        <?php if ((($dias->format('%a')*100)/7)>=50) $progreso = 'progress-bar-warning'; ?>
-                        <?php if ((($dias->format('%a')*100)/7)>=85) $progreso = 'progress-bar-danger'; ?>
-                        
-                        <?php if ((($orden_*100)/7)<50) $progresoD = 'progress-bar-susses'; ?>
-                        <?php if ((($orden_*100)/7)>=50) $progresoD = 'progress-bar-warning'; ?>
-                        <?php if ((($orden_*100)/7)>=85) $progresoD = 'progress-bar-danger'; ?>
-                        <td>
-                            <div class="progress bajocinco">
-                                <div class="progress-bar <?php echo $progreso; ?>" style="width: <?php echo ($dias->format('%a')*100)/7; ?>%;"
-                                                                 title="<?php echo $diaTabla->format('d/m/Y'); ?>" ></div>
-                                <div class="progress-bar progress-bar-info" style="width: <?php echo 100-($dias->format('%a')*100)/7; ?>%;"
-                                                                 title="<?php echo $diaTabla->format('d/m/Y'); ?>" ></div>
-                            </div>
-                            <div class="progress bajocero">
-                                <div class="progress-bar <?php echo $progresoD; ?>" style="width: <?php echo ($orden_*100)/$ordenTotal; ?>%;"
-                                                                title="<?php echo $diaTabla->format('d/m/Y'); ?>"></div>
-                            </div>
-                        </td>
-                        <td>
-                            <?php
-                            if($expediente->getCedido() != ''){
-                                echo "<img src='../images/punto_verde_12.png' title='".
-                                utf8_decode($expediente->getCedido())."' />";
-                            }
-                            ?>
-                        </td>
-                        <!--<td><?php // echo $expediente->getCedido(); ?></td>-->
-                    </tr>
-                    <?php
-                }
+        }
+            
+            unset($oMysqlExpHistoria);
+            unset($oExpHistoria);
+            $oMysqlExpHistoria = $oMysql->getExpHistotiaActiveRecord();
+            $oExpHistoria = new ExpHistoriaValueObject();
+            $oExpHistoria->setIdexpediente($aExpedientes->getIdexpediente());
+            $oExpHistoria = $oMysqlExpHistoria->buscar($oExpHistoria);
+            if($oExpHistoria){
+                $diaTabla = new DateTime($oExpHistoria[0]->getFecha());
+                $dependenciaActual = $oExpHistoria[0]->getDependencia();
+                $orden_ = $dependencia[$dependenciaActual][1];
+            } else {
+                $diaTabla = new DateTime(date('Y-m-d'));
+                $dependenciaActual = 9999;
+                $orden_ = 0;
             }
+            $diaHoy = new DateTime(date('Y-m-d'));
+            $dias = $diaTabla->diff($diaHoy);
             ?>
-            <tr>
-                <td colspan="5"></td>
-                <td>Total Parcial</td>
-                <td> $
+            <tr ondblclick="javascript:window.location.href='../historiaCertificado/<?php echo $aExpedientes->getIdexpediente(); ?>';">
+                <td><?php echo $aExpedientes->getCertNro(); ?></td>
+                <td><?php echo $aExpedientes->getCertDnv(); ?></td>
+                <td><?php echo $aExpedientes->getExpDnv(); ?></td>
+                <td><?php echo $aExpedientes->getExpDpv(); ?></td>
+                <td><?php echo $aExpedientes->getMes(); ?></td>
+                <td><?php echo $dependencia[$dependenciaActual][0]; ?></td>
+                        <!--<td><?php // echo $expediente->getComentario(); ?></td>-->
+                <td>$ <?php echo $aExpedientes->getImporte(); $total += $aExpedientes->getImporte(); ?></td>
+                <td><?php echo $aExpedientes->getVencimiento(); ?></td>
+                <?php if ((($dias->format('%a')*100)/7)<50) $progreso = 'progress-bar-susses'; ?>
+                <?php if ((($dias->format('%a')*100)/7)>=50) $progreso = 'progress-bar-warning'; ?>
+                <?php if ((($dias->format('%a')*100)/7)>=85) $progreso = 'progress-bar-danger'; ?>
+
+                <?php if ((($orden_*100)/7)<50) $progresoD = 'progress-bar-susses'; ?>
+                <?php if ((($orden_*100)/7)>=50) $progresoD = 'progress-bar-warning'; ?>
+                <?php if ((($orden_*100)/7)>=85) $progresoD = 'progress-bar-danger'; ?>
+                <td>
+                    <div class="progress bajocinco">
+                        <div class="progress-bar <?php echo $progreso; ?>" style="width: <?php echo ($dias->format('%a')*100)/7; ?>%;"
+                                                         title="<?php echo $diaTabla->format('d/m/Y'); ?>" ></div>
+                        <div class="progress-bar progress-bar-info" style="width: <?php echo 100-($dias->format('%a')*100)/7; ?>%;"
+                                                         title="<?php echo $diaTabla->format('d/m/Y'); ?>" ></div>
+                    </div>
+                    <div class="progress bajocero">
+                        <div class="progress-bar <?php echo $progresoD; ?>" style="width: <?php echo ($orden_*100)/$ordenTotal; ?>%;"
+                                                        title="<?php echo $diaTabla->format('d/m/Y'); ?>"></div>
+                    </div>
+                </td>
+                <td>
                     <?php
-                    echo $total;
-                    $totalfinal += $total;
+                    if($aExpedientes->getCedido() != ''){
+                        echo "<img src='../images/punto_verde_12.png' title='".
+                        utf8_decode($aExpedientes->getCedido())."' />";
+                    }
                     ?>
                 </td>
-                <td colspan="3"></td>
             </tr>
-        </table>
-        <?php
+            <?php
+            if($llave < count($oExpedientes)-1){
+                if($oExpedientes[$llave]->getIdObra() != $oExpedientes[$llave+1]->getIdObra()){
+                    $nuevo = true;
+                    ?>
+                    <tr>
+                        <td colspan="5"></td>
+                        <td>Total Parcial</td>
+                        <td> $
+                            <?php
+                            echo $total;
+                            $totalfinal += $total;
+                            ?>
+                        </td>
+                        <td colspan="3"></td>
+                    </tr>
+                </table>
+                <?php
+                } else {
+                    $nuevo = false;
+                }
+            } else {
+                ?>
+                <tr>
+                    <td colspan="5"></td>
+                    <td>Total Parcial</td>
+                    <td> $
+                        <?php
+                        echo $total;
+                        $totalfinal += $total;
+                        ?>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+            </table>
+            <?php
+            }
     }
     ?>
-    <!--<div style="width: 30%">-->
     <div class="form-group col-lg-3" style="float: right;">
         <table class="table table-striped table-bordered table-hover">
             <tr>
