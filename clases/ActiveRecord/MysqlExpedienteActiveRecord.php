@@ -60,6 +60,7 @@ class MysqlExpedienteActiveRecord implements ActiveRecord {
     public function buscarPorCertificacion($oValueObject) {
         $sql = "SELECT * FROM expediente WHERE idCertificacion = " 
                 . $oValueObject->getIdCertificacion();
+        echo $sql . "<br>";
         $resultado = mysql_query($sql);
         if($resultado){
             $aExpediente = array();

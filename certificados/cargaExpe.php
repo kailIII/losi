@@ -4,25 +4,36 @@ require_once '../clases/ActiveRecord/ActiveRecordAbstractFactory.php';
 $oMysql = ActiveRecordAbstractFactory::getActiveRecordFactory(ActiveRecordAbstractFactory::MYSQL);
 $oMysql->conectar();
 
-$oMysqlCertificacion = $oMysql->getCertificacionActiveRecord();
-$oCertificacion = new CertificacionValueObject();
-$oCertificacion->setCertNro($_POST['certNro']);
-$oCertificacion = $oMysqlCertificacion->buscarPorCertNro($oCertificacion);
-?>
-<input type="hidden" name="cert01" id="cert01" value="<?php echo $oCertificacion->getId(); ?>" />
-<input type="hidden" name="cert02" id="cert02" value="<?php echo $oCertificacion->getIdObra(); ?>" />
-<input type="hidden" name="cert03" id="cert03" value="<?php echo $oCertificacion->getCertNro(); ?>" />
-<input type="hidden" name="cert04" id="cert04" value="<?php echo $oCertificacion->getIdTipo(); ?>" />
-<input type="hidden" name="cert05" id="cert05" value="<?php echo $oCertificacion->getMes(); ?>" />
-<input type="hidden" name="cert06" id="cert06" value="<?php echo $oCertificacion->getPeriodo(); ?>" />
-<input type="hidden" name="cert07" id="cert07" value="<?php echo $oCertificacion->getImporteBasico(); ?>" />
-<input type="hidden" name="cert08" id="cert08" value="<?php echo $oCertificacion->getImporteRedeterminado(); ?>" />
-<input type="hidden" name="cert09" id="cert09" value="<?php echo $oCertificacion->getFondoReparo(); ?>" />
-<input type="hidden" name="cert09" id="cert10" value="<?php echo $oCertificacion->getAnticipoFinanciero(); ?>" />
-<input type="hidden" name="cert01" id="cert11" value="<?php echo $oCertificacion->getOtrosDescuentos(); ?>" />
-<input type="hidden" name="cert02" id="cert12" value="<?php echo $oCertificacion->getACobrar(); ?>" />
-<input type="hidden" name="cert03" id="cert13" value="<?php echo $oCertificacion->getComentario(); ?>" />
-<input type="hidden" name="cert04" id="cert14" value="<?php echo $oCertificacion->getFecha(); ?>" />
-<input type="hidden" name="cert05" id="cert15" value="<?php echo $oCertificacion->getParticipacion(); ?>" />
-<input type="hidden" name="cert06" id="cert16" value="<?php echo $oCertificacion->getImagen(); ?>" />
-<input type="hidden" name="cert07" id="cert17" value="<?php echo $oCertificacion->getFechaFirma(); ?>" />
+$oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
+$oExpedientes = new ExpedientesValueObject();
+$oExpedientes->setCertNro($_POST['certNro']);
+$oExpedientes->setIdObra($_POST['idobra']);
+
+$oExpedientes = $oMysqlExpedientes->buscarPorCertNroyObra($oExpedientes);
+if(!$oExpedientes){
+    ?>
+    <input type="hidden" name="expe00" id="expe00" value="No" />
+    <?php
+} else {
+    ?>
+    <input type="hidden" name="expe00" id="expe00" value="Si" />
+    <input type="hidden" name="expe01" id="expe01" value="<?php echo $oExpedientes->getIdexpediente(); ?>" />
+    <input type="hidden" name="expe02" id="expe02" value="<?php echo $oExpedientes->getIdObra(); ?>" />
+
+    <input type="hidden" name="expe03" id="expe03" value="<?php echo $oExpedientes->getIdTipo(); ?>" />
+    <input type="hidden" name="expe04" id="expe04" value="<?php echo $oExpedientes->getCertNro(); ?>" />
+    <input type="hidden" name="expe05" id="expe05" value="<?php echo $oExpedientes->getCertDnv(); ?>" />
+
+    <input type="hidden" name="expe06" id="expe06" value="<?php echo $oExpedientes->getExpDpv(); ?>" />
+    <input type="hidden" name="expe07" id="expe07" value="<?php echo $oExpedientes->getExpDnv(); ?>" />
+    <input type="hidden" name="expe08" id="expe08" value="<?php echo $oExpedientes->getMes(); ?>" />
+
+    <input type="hidden" name="expe09" id="expe09" value="<?php echo $oExpedientes->getComentario(); ?>" />
+    <input type="hidden" name="expe10" id="expe10" value="<?php echo $oExpedientes->getImporte(); ?>" />
+    <input type="hidden" name="expe11" id="expe11" value="<?php echo $oExpedientes->getVencimiento(); ?>" />
+
+    <input type="hidden" name="expe12" id="expe12" value="<?php echo $oExpedientes->getCedido(); ?>" />
+    <input type="hidden" name="expe13" id="expe13" value="<?php echo $oExpedientes->getFinalizado(); ?>" />
+    <input type="hidden" name="expe14" id="expe14" value="<?php echo $oExpedientes->getFechaFirma(); ?>" />
+    <?php
+}
