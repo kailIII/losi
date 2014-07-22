@@ -36,17 +36,21 @@ include_once '../inicio/valido.php';
                         </select>
                     </div>
                     <div class="col-lg-1">
+                        <!--<label class="control-label">&nbsp;</label>-->
                         <br />
                         <a href="../obras" title="Nueva Obra">
                             <img src="../images/todo/done-2x.png" alt="Nueva Obra"/>
                         </a>
                     </div>
                 </div>
-
+<!--                <div class="form-group">
+                    
+                </div>-->
                 <div class="form-group">
                     <div class="col-lg-2">
                         <label class="label-success label" data-toggle="tooltip">Certif. Nro.</label>
                         <input class="form-control" data-toggle="tooltip" name="nrocert" title="Numero de Certificado" id="nrocert" alt="Numero de Certificado" placeholder="Certif. Nro." type="text" onblur="carga(this.value)" /><br/>
+                        <!--onkeypress="return soloNumeros(event);"-->
                     </div>
                     <div class="col-lg-2">
                         <label class="label-success label">Certificado DNV</label>
@@ -103,7 +107,7 @@ include_once '../inicio/valido.php';
                 </div>
                 <div class="form-group">
                     <div class="col-lg-3">
-                        <input type="button" id="guardar" value="Guardar" class="btn btn-large btn-block btn-primary" onclick="guardarDatos()" />
+                        <input type="button" value="&nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;" class="btn btn-large btn-block btn-primary" onclick="guardarDatos()" />
                     </div>
                     <div class="col-lg-9" id="divResultado"></div>
                 </div>

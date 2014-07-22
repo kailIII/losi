@@ -16,16 +16,21 @@ function objetoAjax(){
 }
 
 function guardarDatos(){
+    var guardar = document.getElementById('guardar').value;
+    if(guardar === 'Aceptar'){
+        window.location.reload();
+//        history.back();
+        return false;
+    }
     var divResultado = document.getElementById('divResultado');
     var idobra = document.getElementById('nombreobra').value;
-    
+
     var tipocertf = document.getElementById('tipocertf').value;
     var nrocert  = document.getElementById('nrocert').value;
 
     var periodo = document.getElementById('periodo').value;
-    var fechafirma = document.getElementById('fechafirma').value;
+    var fechaFirma = document.getElementById('fechafirma').value;
     
-//    var importeb = document.getElementById('importeb').value;
     var dnvCertificado = document.getElementById("dnvCertificado").value;
 
     var dpvExpediente = document.getElementById("dpvExpediente").value;
@@ -48,23 +53,20 @@ function guardarDatos(){
     //usando del medoto POST archivo que realizará la operacion
     ajax.open("POST", "guardarCertificado.php" ,true);
     ajax.onreadystatechange=function() {
-        if (ajax.readyState===1) {
+        if (ajax.readyState === 1) {
 //            divResultado.innerHTML= '<center><img src="../imag1es/cargando.gif"><br/>Guardando los datos...</center>';
-        } else if (ajax.readyState===4) {
-            //mostrar los nuevos registros en esta capa
+        } else if (ajax.readyState === 4) {
             divResultado.innerHTML = ajax.responseText;
+            document.getElementById('guardar').value = "Aceptar";
         }
     };
-
     //muy importante este encabezado ya que hacemos uso de un formulario
     ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     //enviando los valores
-
     ajax.send("tipocertf="+tipocertf
             +"&nrocert="+nrocert
             +"&periodo="+periodo
-            +"&fechafirma="+fechafirma
-//            +"&importeb="+importeb
+            +"&fechaFirma="+fechaFirma
             +"&dnvCertificado="+dnvCertificado
             +"&dpvExpediente="+dpvExpediente
             +"&dnvExpediente="+dnvExpediente
@@ -209,6 +211,7 @@ function soloNumeros(evt){
 
 function carga(certNro){
     var divResultado = document.getElementById('divResultado');
+    var idobra = document.getElementById('nombreobra').value;
     ajax=objetoAjax();
     ajax.open("POST", "cargaExpe.php" ,true);
     ajax.onreadystatechange=function() {
@@ -217,15 +220,39 @@ function carga(certNro){
         } else if (ajax.readyState===4) {
             //mostrar los nuevos registros en esta capa
             divResultado.innerHTML = ajax.responseText;
-            document.getElementById('dnvExpediente').value = document.getElementById('h_01').value;
-            
-            var mes = document.getElementById('h_04').value;
-            var mes = mes.split('/');
-            
-            document.getElementById('mesExpediente').value = decimeElMes(mes[1])+'-'+mes[2];
+            if(document.getElementById("expe00").value === 'Si'){
+                document.getElementById("dnvExpediente").value = document.getElementById("expe07").value;
+                document.getElementById('tipocertf').value = document.getElementById('expe03').value;
+                document.getElementById('nrocert').value = document.getElementById('expe04').value;
+
+                document.getElementById('periodo').value = document.getElementById('expe08').value;
+                document.getElementById('fechafirma').value = document.getElementById('expe14').value;
+                document.getElementById("dnvCertificado").value = document.getElementById("expe05").value;
+
+                document.getElementById("dpvExpediente").value = document.getElementById("expe06").value;
+                document.getElementById("dnvExpediente").value = document.getElementById("expe07").value;
+                document.getElementById("importeExpediente").value = document.getElementById("expe10").value;
+
+                document.getElementById("vencimientoExpediente").value = document.getElementById("expe11").value;
+                document.getElementById("cedidoExpediente").value = document.getElementById("expe12").value;
+                document.getElementById("comentarioExpediente").value = document.getElementById("expe09").value;
+            } else {
+                document.getElementById("dnvExpediente").value = '';
+                document.getElementById('tipocertf').value = '';
+
+                document.getElementById('periodo').value = '';
+                document.getElementById("dnvCertificado").value = '';
+
+                document.getElementById("dpvExpediente").value = '';
+                document.getElementById("dnvExpediente").value = '';
+                document.getElementById("importeExpediente").value = '';
+
+                document.getElementById("cedidoExpediente").value = '';
+                document.getElementById("comentarioExpediente").value = '';
+            }
         }
     };
     ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     
-    ajax.send("certNro="+certNro);
+    ajax.send("certNro="+certNro+"&idobra="+idobra);
 }

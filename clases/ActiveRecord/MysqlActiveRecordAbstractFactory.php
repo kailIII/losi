@@ -10,6 +10,7 @@ require_once '../clases/ActiveRecord/MysqlPersoneriaActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlComitenteActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlVialidadActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlExpedienteActiveRecord.php';
+require_once '../clases/ActiveRecord/MysqlExpedientesActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlExpHistoriaActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlDependenciaActiveRecord.php';
 require_once '../clases/ActiveRecord/MysqlActualizacionesActiveRecord.php';
@@ -131,6 +132,14 @@ class MysqlActiveRecordAbstractFactory extends ActiveRecordAbstractFactory
    */
    public function getExpedienteActiveRecord() {
       return new MysqlExpedienteActiveRecord();
+   }
+   /**
+   * Nos permite obtener un objeto de tipo MysqlExpedientesActiveRecord.
+   * 
+   * @return MysqlExpedientesActiveRecord
+   */
+   public function getExpedientesActiveRecord() {
+      return new MysqlExpedientesActiveRecord();
    }
    /**
    * Nos permite obtener un objeto de tipo MysqlExpHisotriaActiveRecord.

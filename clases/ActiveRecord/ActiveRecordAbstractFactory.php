@@ -26,6 +26,7 @@ abstract class ActiveRecordAbstractFactory {
     public abstract function getTipocertActiveRecord();
     public abstract function getVialidadActiveRecord();
     public abstract function getExpedienteActiveRecord();
+    public abstract function getExpedientesActiveRecord();
     public abstract function getExpHistotiaActiveRecord();
     public abstract function getDependenciaActiveRecord();
     public abstract function getActualizacionesActiveRecord();
