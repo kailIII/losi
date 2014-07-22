@@ -170,6 +170,41 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
      * @param ExpedientesValueObject $oValueObject
      * @return boolean
      */
+    public function buscarPorExpediente($oValueObject) {
+        $sql = "SELECT * FROM expedientes WHERE idexpediente = " . $oValueObject->getIdexpediente() . ";";
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $aExpedientes = array();
+            while ($fila = mysql_fetch_object($resultado)){
+                $oValueObject = new ExpedientesValueObject();
+                $oValueObject->setIdexpediente($fila->idexpediente);
+                $oValueObject->setIdObra($fila->idObra);
+                $oValueObject->setIdTipo($fila->idTipo);
+                $oValueObject->setCertNro($fila->certNro);
+                $oValueObject->setCertDnv($fila->certDnv);
+                $oValueObject->setExpDpv($fila->expDpv);
+                $oValueObject->setExpDnv($fila->expDnv);
+                $oValueObject->setMes($fila->mes);
+                $oValueObject->setComentario($fila->comentario);
+                $oValueObject->setImporte($fila->importe);
+                $oValueObject->setVencimiento($fila->vencimiento);
+                $oValueObject->setCedido($fila->cedido);
+                $oValueObject->setFinalizado($fila->finalizado);
+                $oValueObject->setFechaFirma($fila->fechaFirma);
+                $aExpedientes[] = $oValueObject;
+                unset($oValueObject);
+            }
+            return $aExpedientes;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
     public function buscarNoFinalizados() {
         $sql = "SELECT * FROM expedientes WHERE finalizado = 'N' "
                 . "ORDER BY idObra, idexpediente;";
