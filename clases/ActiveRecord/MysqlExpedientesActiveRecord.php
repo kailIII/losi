@@ -8,7 +8,26 @@ include_once '../clases/ValueObject/ExpedientesValueObject.php';
  */
 class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function actualizar($oValueObject) {
-        
+        $sql = "UPDATE expedientes SET idTipo = " . $oValueObject->getIdTipo()
+                . ", certNro = '" . $oValueObject->getCertNro() . "'"
+                . ", certDnv = '" . $oValueObject->getCertDnv() . "'"
+                . ", expDpv = '" . $oValueObject->getExpDpv() . "'"
+                . ", expDnv = '" . $oValueObject->getExpDnv() . "'"
+                . ", mes = '" . $oValueObject->getMes() . "'"
+                . ", comentario = '" . $oValueObject->getComentario() . "'"
+                . ", importe = '" . $oValueObject->getImporte() . "'"
+                . ", vencimiento = '" . $oValueObject->getVencimiento() . "'"
+                . ", cedido = '" . $oValueObject->getCedido() . "'"
+                . ", finalizado = '" . $oValueObject->getFinalizado() . "'"
+                . ", fechaFirma = '" . $oValueObject->getFechaFirma() . "'"
+                . " WHERE certNro = '" . $oValueObject->getCertNro() . "' "
+                . "AND idObra = " . $oValueObject->getIdObra() . ";";
+        $resultado = mysql_query($sql) or die(false);
+        if($resultado){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function borrar($oValueObject) {
@@ -187,7 +206,10 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     }
 
     public function existe($oValueObject) {
-        
+        $sql = "SELECT * FROM expedientes WHERE certNro = '" . $oValueObject->getCertNro() . "' "
+                . "AND idObra = " . $oValueObject->getIdObra() . ";";
+        $resultado = mysql_query($sql);
+        return mysql_fetch_object($resultado);
     }
 
     /**
@@ -227,5 +249,4 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-
 }
