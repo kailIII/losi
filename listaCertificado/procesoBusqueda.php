@@ -131,7 +131,6 @@ $oObra = $oMysqlObras->buscarComitente($oObra);
         <?php
         }
     }
-//    }
 
     ?>
     <div class="form-group col-lg-3" style="float: right;">
