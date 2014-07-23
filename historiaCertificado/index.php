@@ -27,27 +27,22 @@ $oMysql->conectar();
                 </ul>
                 <?php
                 /* Buscar a travez del id del expediente los datos para poder buscar el historial del mismo. */
-                $oExpediente = new ExpedienteValueObject();
-                $oMysqlExpediente = $oMysql->getExpedienteActiveRecord();
-                $oExpediente->setIdexpediente($_GET['id']);
-                $oExpediente = $oMysqlExpediente->buscarPorExpediente($oExpediente);
+                $oExpedientes = new ExpedientesValueObject();
+                $oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
+                $oExpedientes->setIdexpediente($_GET['id']);
+                $oExpedientes = $oMysqlExpedientes->buscarPorExpediente($oExpedientes);
 
                 /* Falta mostrar el nombre de la obra */
-                $oMysqlCertificacion = $oMysql->getCertificacionActiveRecord();
-                $oCertificacion = new CertificacionValueObject();
-                $oCertificacion->setId($oExpediente[0]->getIdCertificacion());
-                $oCertificacion = $oMysqlCertificacion->buscar($oCertificacion);
-                
                 $oMysqlObra = $oMysql->getObrasEjecutadasActiveRecord();
                 $oObra = new ObrasEjecutadasValueObject();
                 
-                $oObra->setID($oCertificacion->getIdObra());
+                $oObra->setID($oExpedientes[0]->getIdObra());
                 $oObra = $oMysqlObra->buscar($oObra);
                 ?>
                 <input type="hidden" id="idexpe" name="idexpe" value="<?php echo $_GET['id']; ?>" />
                 <table class="table table-striped table-bordered table-hover">
                     <tr>
-                        <td colspan="10" class="success"><?php echo utf8_encode($oObra->getDenominacion()); ?></td>
+                        <td colspan="10" class="success"><?php echo utf8_encode($oObra->getDenominacion() . " -- " . $oObra->getExpPrincipal()); ?></td>
                     </tr>
                     <tr>
                         <th>Certificado DPV</th>
@@ -60,16 +55,16 @@ $oMysql->conectar();
                         <th>Cedido</th>
                     </tr>
                     <tr>
-                        <td><?php echo $oExpediente[0]->getCertDpv(); ?></td>
-                        <td><?php echo $oExpediente[0]->getCertDnv(); ?></td>
-                        <td><?php echo $oExpediente[0]->getExpDnv(); ?></td>
-                        <td><?php echo $oExpediente[0]->getExpDpv(); ?></td>
-                        <td><?php echo $oExpediente[0]->getMes(); ?></td>
-                        <td><?php echo $oExpediente[0]->getImporte(); ?></td>
-                        <td><?php echo $oExpediente[0]->getVencimiento(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getCertNro(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getCertDnv(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getExpDnv(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getExpDpv(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getMes(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getImporte(); ?></td>
+                        <td><?php echo $oExpedientes[0]->getVencimiento(); ?></td>
                         <td>
                             <input type="text" id="cedido" name="cedido" 
-                                   value="<?php echo $oExpediente[0]->getCedido(); ?>" ondblclick="habilita(this.id)"/>
+                                   value="<?php echo $oExpedientes[0]->getCedido(); ?>" ondblclick="habilita(this.id)"/>
                         </td>
                     </tr>
                 </table>
@@ -77,7 +72,7 @@ $oMysql->conectar();
                 /* Ahora tengo que mostrar el historial del expediente. */
                 $oExpHistoria = new ExpHistoriaValueObject();
                 $oMysqlExpHistoria = $oMysql->getExpHistotiaActiveRecord();
-                $oExpHistoria->setIdexpediente($oExpediente[0]->getIdexpediente());
+                $oExpHistoria->setIdexpediente($oExpedientes[0]->getIdexpediente());
                 $oExpHistoria = $oMysqlExpHistoria->buscar($oExpHistoria);
                 ?>
                 <legend>Hitorico</legend>
@@ -121,7 +116,7 @@ $oMysql->conectar();
             </div>
             <div id="divResultado"></div>
             <div id="divResultado1"></div>
-            <script> busquedaExpediente(<?php echo "'".$oExpediente[0]->getExpDnv()."'"; ?>); </script>
+            <script> busquedaExpediente(<?php echo "'".$oExpedientes[0]->getExpDnv()."'"; ?>); </script>
         </div>
         <?php include_once "../includes/php/footer.php";?>
         <?php include_once "../includes/php/flatui_js.php";?>

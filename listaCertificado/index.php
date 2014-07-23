@@ -64,26 +64,24 @@ $oMysql->conectar();
                 </div>
             </div>
             <legend>Certificados</legend>
-            <div class="row">
-            <div class="form-group">
-                <div class="col-lg-12">
-                    <label class="control-label"> Comitente </label><br />
-                </div>
-                <?php
-                $oMysqlComitente = $oMysql->getComitenteActiveRecord();
-                $oComitente = new ComitenteValueObject();
-                $oComitente = $oMysqlComitente->buscarTodo();
-                foreach ($oComitente as $aComitente) {
-                    ?>
-                    <div class="col-lg-4">
-                        <input type="checkbox" class="checkbox checkbox-inline" name="comitente" id="comitente<?php echo $aComitente->getId(); ?>" value="<?php echo $aComitente->getId(); ?>" onchange="cambio()"> &nbsp; <?php echo utf8_encode($aComitente->getDescripcion()); ?>
-                    </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">Filtro por comitente</div>
+              <div class="panel-body">
                     <?php
-                }
-                ?>
-            </div>
-            </div>
-            <div class="row" id="listado">
+                    $oMysqlComitente = $oMysql->getComitenteActiveRecord();
+                    $oComitente = new ComitenteValueObject();
+                    $oComitente = $oMysqlComitente->buscarTodo();
+                    foreach ($oComitente as $aComitente) {
+                        ?>
+                        <div class="col-lg-4">
+                            <input type="checkbox" class="checkbox checkbox-inline" name="comitente" id="comitente<?php echo $aComitente->getId(); ?>" value="<?php echo $aComitente->getId(); ?>" onchange="cambio()"> &nbsp; <?php echo utf8_encode($aComitente->getDescripcion()); ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+              </div>
+            </div>                               
+            <div id="listado">
                 <?php include './todo.php';?>
             </div>
         </div>

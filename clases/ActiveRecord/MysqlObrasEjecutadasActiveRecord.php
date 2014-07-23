@@ -371,10 +371,14 @@ class MysqlObrasEjecutadasActiveRecord implements ActiveRecord{
      * @return int
      */
     public function comprueba($oValueObject) {
+//        $sql = "SELECT COUNT(*) 
+//            FROM obrasejecutadas o 
+//            INNER JOIN certificacion c ON c.idObra = o.id 
+//            INNER JOIN expediente e ON e.idCertificacion  = c.id AND e.finalizado = 'N'
+//            WHERE o.id = " . $oValueObject->getID();
         $sql = "SELECT COUNT(*) 
             FROM obrasejecutadas o 
-            INNER JOIN certificacion c ON c.idObra = o.id 
-            INNER JOIN expediente e ON e.idCertificacion  = c.id AND e.finalizado = 'N'
+            INNER JOIN expedientes e ON e.idObra = o.id AND e.finalizado = 'N'
             WHERE o.id = " . $oValueObject->getID();
         $resultado = mysql_query($sql);
         if($resultado){

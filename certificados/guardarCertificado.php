@@ -21,9 +21,17 @@ $oExpedientes->setVencimiento($_POST['vencimientoExpediente']);
 $oExpedientes->setCedido($_POST['cedidoExpediente']);
 $oExpedientes->setFinalizado('N');
 $oExpedientes->setFechaFirma($_POST['fechaFirma']);
+
+
 /* Grabacion del expediente. */
-if(!$oMysqlExpedientes->guardar($oExpedientes)){
-    $error = 5;
+if($oMysqlExpedientes->existe($oExpedientes)){
+    if(!$oMysqlExpedientes->actualizar($oExpedientes)){
+        $error = 1;
+    }
+} else {
+    if(!$oMysqlExpedientes->guardar($oExpedientes)){
+        $error = 2;
+    }
 }
 if($error == 0){
     mysql_query("COMMIT;");
