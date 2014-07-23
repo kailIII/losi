@@ -28,11 +28,8 @@ $organismoD = strpos($expediente, 'Organismo Externo Destino : ');/*28*/
 $dependenciaD = strpos($expediente, 'Dependencia Destino: ');/*21*/
 $conformado = strpos($expediente, 'Conformado: ');/*12*/
 if(trim(substr($expediente, $extracto+10, $estado-$extracto-10)) === "ECCION NACIONAL DE VIALIDAD                	  	  	         	  Consulta           por Expediente") {
-
-    echo "tincho 1";
-    
+    return false;
 } else {
-    echo "tincho 2";
     require_once '../clases/ActiveRecord/ActiveRecordAbstractFactory.php';
     $oMysql = ActiveRecordAbstractFactory::getActiveRecordFactory(ActiveRecordAbstractFactory::MYSQL);
     $oMysql->conectar();
@@ -55,12 +52,11 @@ if(trim(substr($expediente, $extracto+10, $estado-$extracto-10)) === "ECCION NAC
 
     /* Antes de almacenar los datos en la tabla vialidad, busco en la tabla expediete 
      * el numero de expediente correspondiente. */
-    $oMysqlExpediente = $oMysql->getExpedienteActiveRecord();
-    $oExpediente = new ExpedienteValueObject();
-    $oExpediente->setExpDnv($_POST['expediente']);
-    $oExpediente = $oMysqlExpediente->buscarPorExpDnv($oExpediente);
-    var_dump($oExpediente);
-    $oVialidad->setIdexpediente($oExpediente->getIdexpediente());
+    $oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
+    $oExpedientes = new ExpedientesValueObject();
+    $oExpedientes->setExpDnv($_POST['expediente']);
+    $oExpedientes = $oMysqlExpedientes->buscarPorExpDnv($oExpedientes);
+    $oVialidad->setIdexpediente($oExpedientes->getIdexpediente());
     $oMysqlVialidad->guardar($oVialidad);
     
     /* Busco el identificador de la dependencia. */
@@ -82,7 +78,7 @@ if(trim(substr($expediente, $extracto+10, $estado-$extracto-10)) === "ECCION NAC
     /* Almaceno los datos en la tabla de exphistoria. */
     $oMysqlExpHistoria = $oMysql->getExpHistotiaActiveRecord();
     $oExpHistoria = new ExpHistoriaValueObject();
-    $oExpHistoria->setIdexpediente($oExpediente->getIdexpediente());
+    $oExpHistoria->setIdexpediente($oExpedientes->getIdexpediente());
     $oExpHistoria->setFecha(date('Y-m-d'));
     $oExpHistoria->setDependencia($oDependencia->getIddependencia());
     $oExpHistoria->setComentario('Actualización automática');
@@ -94,7 +90,6 @@ if(trim(substr($expediente, $extracto+10, $estado-$extracto-10)) === "ECCION NAC
     $oMysqlActualizaciones = $oMysql->getActualizacionesActiveRecord();
     $oActualizacones = new ActualizacionesValueObject($_SESSION['usuario']);
     $oMysqlActualizaciones->guardar($oActualizacones);
-    echo $_SESSION['usuario'];
-    
+//    echo $_SESSION['usuario'];
     /* Finalizacion de almacenamiento del historico. */
 }

@@ -167,6 +167,70 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     
     /**
      * 
+     * @param ExpedienteValueObject $oValueObject
+     * @return boolean
+     */
+    public function buscarPorExpDnv($oValueObject) {
+        $sql = "SELECT * FROM expedientes WHERE expDnv = " . $oValueObject->getExpDnv();
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $fila = mysql_fetch_object($resultado);
+            $oValueObject->setIdexpediente($fila->idexpediente);
+            $oValueObject->setIdObra($fila->idObra);
+            $oValueObject->setIdTipo($fila->idTipo);
+            $oValueObject->setCertNro($fila->certNro);
+            $oValueObject->setCertDnv($fila->certDnv);
+            $oValueObject->setExpDpv($fila->expDpv);
+            $oValueObject->setExpDnv($fila->expDnv);
+            $oValueObject->setMes($fila->mes);
+            $oValueObject->setComentario($fila->comentario);
+            $oValueObject->setImporte($fila->importe);
+            $oValueObject->setVencimiento($fila->vencimiento);
+            $oValueObject->setCedido($fila->cedido);
+            $oValueObject->setFinalizado($fila->finalizado);
+            $oValueObject->setFechaFirma($fila->fechaFirma);
+            return $oValueObject;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * El buscarSinfin trae todos los datos que se encuentran en la tabla expediente
+     * y los cuales no han sido finalizados.
+     */
+    public function buscarSinFin() {
+        $sql = "SELECT * FROM expedientes WHERE finalizado = 'N';";
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $aExpedientes = array();
+            while ($fila = mysql_fetch_object($resultado)){
+                $oValueObject = new ExpedientesValueObject();
+                $oValueObject->setIdexpediente($fila->idexpediente);
+                $oValueObject->setIdObra($fila->idObra);
+                $oValueObject->setIdTipo($fila->idTipo);
+                $oValueObject->setCertNro($fila->certNro);
+                $oValueObject->setCertDnv($fila->certDnv);
+                $oValueObject->setExpDpv($fila->expDpv);
+                $oValueObject->setExpDnv($fila->expDnv);
+                $oValueObject->setMes($fila->mes);
+                $oValueObject->setComentario($fila->comentario);
+                $oValueObject->setImporte($fila->importe);
+                $oValueObject->setVencimiento($fila->vencimiento);
+                $oValueObject->setCedido($fila->cedido);
+                $oValueObject->setFinalizado($fila->finalizado);
+                $oValueObject->setFechaFirma($fila->fechaFirma);
+                $aExpedientes[] = $oValueObject;
+                unset($oValueObject);
+            }
+            return $aExpedientes;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
      * @param ExpedientesValueObject $oValueObject
      * @return boolean
      */

@@ -9,12 +9,12 @@ $oMysql = ActiveRecordAbstractFactory::getActiveRecordFactory(ActiveRecordAbstra
 $oMysql->conectar();
 
 /* Busco los datos de la tabla expediente para poder realizar un array. */
-$oMysqlExpediente = $oMysql->getExpedienteActiveRecord();
-$oExpediente = new ExpedienteValueObject();
-$oExpediente = $oMysqlExpediente->buscarSinFin();
-$aExpediente = array();
-foreach ($oExpediente as $aExpe) {
-    $aExpediente[] = $aExpe->getExpDnv();
+$oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
+$oExpedientes = new ExpedientesValueObject();
+$oExpedientes = $oMysqlExpedientes->buscarSinFin();
+$aExpedientes = array();
+foreach ($oExpedientes as $aExpe) {
+    $aExpedientes[] = $aExpe->getExpDnv();
 }
 ?>
 <!DOCTYPE html>
@@ -34,7 +34,7 @@ foreach ($oExpediente as $aExpe) {
                     <!--<div class="col-lg-11">-->
                         <div class="progress">
                             <input type="hidden" id="progreso" name="progreso" value="0" />
-                            <input type="hidden" id="total" name="total" value="<?php echo count($aExpediente); ?>" />
+                            <input type="hidden" id="total" name="total" value="<?php echo count($aExpedientes); ?>" />
                             <div class="progress-bar progress-bar-susses" style="width: 0%;" id="barra"></div>
                         </div>
                         <div id="divResultado" style="text-align: center;">
@@ -44,7 +44,10 @@ foreach ($oExpediente as $aExpe) {
                         <div id="divResultado1" style="display: none;" ></div>
                         <div id="divResultado2" style="display: none;" >
                             <div class="form-group has-success">
-                                <div class="col-xs6">
+                                <div class="col-lg-3">
+                                    <input type="button" value="Aceptar" class="btn btn-large btn-block btn-primary" onclick="window.history.back();" />
+                                </div>
+                                <div class="col-lg-9">
                                     <a href="../listaCertificado/" class="form-control" >Los Datos Se Actualizaron Correctamente.</a>
                                     <!--<span class="input-icon fui-check-inverted"></span>-->
                                 </div>
@@ -72,7 +75,7 @@ foreach ($oExpediente as $aExpe) {
  */
 $seg = date("s");
 $cont = 0;
-foreach ($aExpediente as $aExpe_1) {
+foreach ($aExpedientes as $aExpe_1) {
     ?>
     <br>
     <script>actualizarExpediente('<?php echo $aExpe_1; ?>', <?php echo $cont; ?>);</script>

@@ -136,7 +136,7 @@ class MysqlDependenciaActiveRecord implements ActiveRecord{
     }
 
     /**
-     * 
+     *
      * @param DependenciaValueObject $oValueObject
      * @return boolean
      */
@@ -145,39 +145,25 @@ class MysqlDependenciaActiveRecord implements ActiveRecord{
          *  Si existe busco el iddependencia para devolverlo,
          * Si no existe lo almaceno y devuelvo el iddependencia correspondiente.
          */
-        
-        /* Primero compruebo que el dato no exista en la base. */
-        $sql ="SELECT iddependencia, dependencia, dias, orden FROM dependencia "
-                . " WHERE dependencia = '" . $oValueObject->getDependencia() ."';";
-        $resultado = mysql_query($sql);
-        $resultado = mysql_fetch_object($resultado);
-        if($resultado){
-            $oValueObject->setIddependencia($resultado->iddependencia);
-            $oValueObject->setDias($resultado->dias);
-            $oValueObject->setOrden($resultado->orden);
+        if($oValueObject->getOrden()!=''){
+               $sql = "INSERT INTO dependencia (dependencia, dias, orden) VALUES ("
+                . "'" . $oValueObject->getDependencia() . "', "
+                . $oValueObject->getDias() . ", "
+                . $oValueObject->getOrden() .");";
+        } else {
+            $sql = "INSERT INTO dependencia (dependencia, dias) VALUES ("
+                . "'" . $oValueObject->getDependencia() . "', "
+                . "7);";
+        }
+        if(mysql_query($sql)){
+            $result = mysql_query("SELECT DISTINCT LAST_INSERT_ID() FROM expediente");
+            $id = mysql_fetch_array($result);
+            if($id[0]<>0) {
+                $oValueObject->setIddependencia($id[0]);
+            }
             return TRUE;
         } else {
-            if($oValueObject->getOrden()!=''){
-                   $sql = "INSERT INTO dependencia (dependencia, dias, orden) VALUES ("
-                    . "'" . $oValueObject->getDependencia() . "', "
-                    . $oValueObject->getDias() . ", "
-                    . $oValueObject->getOrden() .");";
-            } else {
-                $sql = "INSERT INTO dependencia (dependencia, dias) VALUES ("
-                    . "'" . $oValueObject->getDependencia() . "', "
-//                    . "7);";
-                    . $oValueObject->getDias() .")";
-            }
-            if(mysql_query($sql)){
-                $result = mysql_query("SELECT DISTINCT LAST_INSERT_ID() FROM expediente");
-                $id = mysql_fetch_array($result);
-                if($id[0]<>0) {
-                    $oValueObject->setIddependencia($id[0]);
-                }
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+            return FALSE;
         }
     }
 }
