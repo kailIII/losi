@@ -59,7 +59,7 @@ $nuevo = true;
         $oObra = $oMysqlObra->buscar($oObra);
         if($nuevo){
         ?>
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover table-responsive">
             <tr>
                 <td colspan="10" class="success"><?php echo utf8_encode($oObra->getDenominacion().' -- '.$oObra->getExpPrincipal()); ?></td>
             </tr>
