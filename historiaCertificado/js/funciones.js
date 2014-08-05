@@ -21,12 +21,12 @@ function busquedaExpediente(expediente){
     }
 
     var divResultado = document.getElementById('divResultado1');
-    divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
+//    divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
     ajax=objetoAjax();
     ajax.open("POST", "busqueda.php" ,true);
     ajax.onreadystatechange=function() {
         if (ajax.readyState === 1) {
-            divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
+//            divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
         } else if (ajax.readyState===4) {
             divResultado.innerHTML = ajax.responseText;
             if(document.getElementById('dependencia').value === document.getElementById('h_08').value){
@@ -44,9 +44,10 @@ function busquedaExpediente(expediente){
                     fecha[1] = '0'+fecha[1];
                 }
                 document.getElementById('fecha').innerHTML = fecha[2]+"-"+fecha[1]+"-"+fecha[0];
-                document.getElementById('actual').style.display = '';
+//                document.getElementById('actual').style.display = '';
                 guardarDatos();
             }
+            document.getElementById('accion').innerHTML = 'Agregar';
         }
         divResultado.style.display = 'none';
 //        document.getElementById('divResultado1').style.display = 'none';
@@ -95,6 +96,10 @@ function habilita(id){
 }
 
 function guardarDatos(){
+    if(document.getElementById('accion').innerHTML === 'Agregar'){
+        agregarDependencia();
+        return true;
+    }
     /* Busco los datos relacionados con el historial del expediente. */
     var comen = document.getElementById('comen').innerHTML;
     var depen = document.getElementById('depen').innerHTML;
@@ -157,7 +162,7 @@ function actualizarExpediente(expediente, i){
     }
     ajax[i].onreadystatechange=function() {
         if (ajax[i].readyState === 1) {
-            divResultado.innerHTML = "<img src='../images/todo/preload.GIF'>";
+//            divResultado.innerHTML = "<img src='../images/todo/preload.GIF'>";
         }
         if (ajax[i].readyState === 4) {
             divResultado.innerHTML = ajax[i].responseText;
@@ -174,4 +179,9 @@ function actualizarExpediente(expediente, i){
         }
     };
     ajax[i].send("expediente="+expediente_aux[0] + "&ano="+expediente_aux[1]);  
+}
+
+function agregarDependencia(){
+    document.getElementById('actual').style.display = '';
+    document.getElementById('accion').innerHTML = 'Guardar';
 }
