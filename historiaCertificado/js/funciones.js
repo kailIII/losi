@@ -44,7 +44,7 @@ function busquedaExpediente(expediente){
                     fecha[1] = '0'+fecha[1];
                 }
                 document.getElementById('fecha').innerHTML = fecha[2]+"-"+fecha[1]+"-"+fecha[0];
-//                document.getElementById('actual').style.display = '';
+                document.getElementById('actual').style.display = 'inline';
                 guardarDatos();
             }
             document.getElementById('accion').innerHTML = 'Agregar';
@@ -182,6 +182,6 @@ function actualizarExpediente(expediente, i){
 }
 
 function agregarDependencia(){
-    document.getElementById('actual').style.display = '';
+    document.getElementById('Nueva').style.display = 'inline';
     document.getElementById('accion').innerHTML = 'Guardar';
 }

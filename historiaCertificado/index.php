@@ -20,23 +20,23 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
         <?php include_once "../includes/php/header.php"; ?>
         <div class="container">
             <legend>Expediente Certificados</legend>
-            <div class="row">
-                <div class="col-sm-12">
-                    <?php
-                    /* Buscar a travez del id del expediente los datos para poder buscar el historial del mismo. */
-                    $oExpedientes = new ExpedientesValueObject();
-                    $oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
-                    $oExpedientes->setIdexpediente($_GET['id']);
-                    $oExpedientes = $oMysqlExpedientes->buscarPorExpediente($oExpedientes);
+            <div class="row table-responsive">
+                <?php
+                /* Buscar a travez del id del expediente los datos para poder buscar el historial del mismo. */
+                $oExpedientes = new ExpedientesValueObject();
+                $oMysqlExpedientes = $oMysql->getExpedientesActiveRecord();
+                $oExpedientes->setIdexpediente($_GET['id']);
+                $oExpedientes = $oMysqlExpedientes->buscarPorExpediente($oExpedientes);
 
-                    /* Falta mostrar el nombre de la obra */
-                    $oMysqlObra = $oMysql->getObrasEjecutadasActiveRecord();
-                    $oObra = new ObrasEjecutadasValueObject();
+                /* Falta mostrar el nombre de la obra */
+                $oMysqlObra = $oMysql->getObrasEjecutadasActiveRecord();
+                $oObra = new ObrasEjecutadasValueObject();
 
-                    $oObra->setID($oExpedientes[0]->getIdObra());
-                    $oObra = $oMysqlObra->buscar($oObra);
-                    ?>
-                    <input type="hidden" id="idexpe" name="idexpe" value="<?php echo $_GET['id']; ?>" />
+                $oObra->setID($oExpedientes[0]->getIdObra());
+                $oObra = $oMysqlObra->buscar($oObra);
+                ?>
+                <input type="hidden" id="idexpe" name="idexpe" value="<?php echo $_GET['id']; ?>" />
+                <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover">
                         <tr>
                             <td colspan="10" class="success"><?php echo utf8_encode($oObra->getDenominacion() . " -- " . $oObra->getExpPrincipal()); ?></td>
@@ -49,7 +49,6 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                             <th>Mes</th>
                             <th>Importe</th>
                             <th>Vto.</th>
-                            <th>Cedido</th>
                         </tr>
                         <tr>
                             <td><?php echo $oExpedientes[0]->getCertNro(); ?></td>
@@ -59,36 +58,54 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                             <td><?php echo $oExpedientes[0]->getMes(); ?></td>
                             <td><?php echo $oExpedientes[0]->getImporte(); ?></td>
                             <td><?php echo $oExpedientes[0]->getVencimiento(); ?></td>
-                            <td>
-                                <input type="text" id="cedido" name="cedido" value="<?php echo $oExpedientes[0]->getCedido(); ?>" ondblclick="habilita(this.id)"/>
+                        </tr>
+                        <tr>
+                            <td>Cedido</td>
+                            <td colspan="6">
+                                <div class="col-sm-11 col-lg-11">
+                                    <input class="form-control" data-toggle="tooltip" name="cedido" id="cedido" title="Cedido" alt="Cedido" type="text" value="<?php echo $oExpedientes[0]->getCedido(); ?>" />
+                                </div>
+                                <div class="col-sm-1 col-lg-1">
+                                    <a href="../obras" title="Almacenar cedido">
+                                        <img src="../images/todo/done.png" alt="Almacenar cedido"/>
+                                    </a>
+<!--                                </div>
+                                <div class="col-sm-1 col-lg-1">-->
+                                    <a href="../obras" title="Finalizar expediente">
+                                        <img src="../images/todo/done1.png" alt="Finalizar expediente"/>
+                                    </a>
+                                </div>
+                                <!--<input type="text" id="cedido" name="cedido" value="<?php // echo $oExpedientes[0]->getCedido(); ?>" ondblclick="habilita(this.id)"/>-->
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
             
-            <div class="row" id="actual" style="display: none;">
+            <div class="row" id="Nueva" style="display: none;">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <input class="form-control" data-toggle="tooltip" name="fecha" id="fecha" title="Fecha" alt="Fecha" type="date" value="<?php echo date('Y-m-d'); ?>" />
+                    <div class="col-sm-4 col-lg-4">
+                        <input class="form-control" data-toggle="tooltip" name="fechaNueva" id="fechaNueva" title="Fecha" alt="Fecha" type="date" value="<?php echo date('Y-m-d'); ?>" />
                     </div>
-                    <div class="col-sm-6">
-                        <select id="depen" name="depen" class="select-block" >
+                    <div class="col-sm-2 col-lg-2">
+                    </div>
+                    <div class="col-sm-6 col-lg-6">
+                        <select id="depenNueva" name="depenNueva" class="select-block" >
                         <?php
                         foreach ($oDependencia as $aDependencia) {
-                            ?><option><?php echo $aDependencia->getDependencia(); ?></option><?php
+                            if($aDependencia->getDependencia() != '') {
+                                ?><option value="<?php echo $aDependencia->getIddependencia(); ?>"><?php echo $aDependencia->getDependencia(); ?></option><?php
+                            }
                         }
                         ?>
                         </select>
-                    </div>
-                    <div class="col-sm-2">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
                         <label class="label-success label">Comentario</label>
-                        <input class="form-control" name="comen" id="comen" title="Comentario" alt="Comentario" placeholder="Comentario">
+                        <input class="form-control" name="comenNueva" id="comenNueva" title="Comentario" alt="Comentario" placeholder="Comentario">
                     </div>
                 </div>
             </div>
@@ -104,7 +121,7 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                     <div id="divResultado" style="animation: fadein 1s;"></div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row table-responsive">
                 <?php
                 /* Ahora tengo que mostrar el historial del expediente. */
                 $oExpHistoria = new ExpHistoriaValueObject();
@@ -119,7 +136,11 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                         <th>Dependencia</th>
                         <th>Comentario</th>
                     </tr>
-
+                    <tr>
+                        <td><div id="fecha"></div></td>
+                        <td><div id="depen"></div></td>
+                        <td><div id="comen"></div></td>
+                    </tr>
                     <?php
                     $dependencia = "";
                     $oMysqlDependencia = $oMysql->getDependenciaActiveRecord();
