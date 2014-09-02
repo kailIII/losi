@@ -60,28 +60,25 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                             <td><?php echo $oExpedientes[0]->getVencimiento(); ?></td>
                         </tr>
                         <tr>
-                            <td>Cedido</td>
+                            <th>Cedido</th>
                             <td colspan="6">
-                                <div class="col-sm-11 col-lg-11">
+                                <div class="col-md-10">
                                     <input class="form-control" data-toggle="tooltip" name="cedido" id="cedido" title="Cedido" alt="Cedido" type="text" value="<?php echo $oExpedientes[0]->getCedido(); ?>" />
                                 </div>
-                                <div class="col-sm-1 col-lg-1">
-                                    <a href="../obras" title="Almacenar cedido">
-                                        <img src="../images/todo/done.png" alt="Almacenar cedido"/>
-                                    </a>
-<!--                                </div>
-                                <div class="col-sm-1 col-lg-1">-->
-                                    <a href="../obras" title="Finalizar expediente">
-                                        <img src="../images/todo/done1.png" alt="Finalizar expediente"/>
-                                    </a>
+                                <div class="col-md-2">
+                                    <div class="col-md-6">
+                                        <img src="../images/todo/done.png" title="Almacenar cedido" alt="Almacenar cedido" onclick="almacenarCedido(<?php echo $_GET['id']; ?>);"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <img src="../images/todo/done1.png" title="Finalizar expediente" alt="Finalizar expediente" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);"/>
+                                    </div>
                                 </div>
-                                <!--<input type="text" id="cedido" name="cedido" value="<?php // echo $oExpedientes[0]->getCedido(); ?>" ondblclick="habilita(this.id)"/>-->
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
-            
+
             <div class="row" id="Nueva" style="display: none;">
                 <div class="row">
                     <div class="col-sm-4 col-lg-4">
@@ -91,13 +88,13 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                     </div>
                     <div class="col-sm-6 col-lg-6">
                         <select id="depenNueva" name="depenNueva" class="select-block" >
-                        <?php
-                        foreach ($oDependencia as $aDependencia) {
-                            if($aDependencia->getDependencia() != '') {
-                                ?><option value="<?php echo $aDependencia->getIddependencia(); ?>"><?php echo $aDependencia->getDependencia(); ?></option><?php
+                            <?php
+                            foreach ($oDependencia as $aDependencia) {
+                                if ($aDependencia->getDependencia() != '') {
+                                    ?><option value="<?php echo $aDependencia->getIddependencia(); ?>"><?php echo $aDependencia->getDependencia(); ?></option><?php
+                                }
                             }
-                        }
-                        ?>
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -165,12 +162,12 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                 </table>
                 <input type="hidden" value="<?php echo $dependencia; ?>" id="dependencia" />
             </div>
-            
+
             <div id="divResultado1"></div>
             <script> busquedaExpediente(<?php echo "'" . $oExpedientes[0]->getExpDnv() . "'"; ?>);</script>
         </div>
     </div>
     <?php include_once "../includes/php/footer.php"; ?>
     <?php include_once "../includes/php/flatui_js.php"; ?>
-    </body>
+</body>
 </html>

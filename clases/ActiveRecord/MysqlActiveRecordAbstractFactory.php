@@ -33,19 +33,16 @@ class MysqlActiveRecordAbstractFactory extends ActiveRecordAbstractFactory {
         return parent::getActiveRecordFactory($motor);
     }
 
-//   const HOST = 'mysql15.000webhost.com';
-//   const USER = 'a5248503_kiosco';
-//   const PASS = 'T1nch0_web';
-//   const DB = 'a5248503_kiosco';
+//    const HOST = 'mysql10.000webhost.com';
+//    const USER = 'a9451622_losisa';
+//    const PASS = 'T1nch0_losi';
+//    const DB = 'a9451622_losisa';
+    
     const HOST = 'localhost';
     const USER = 'root';
     const PASS = 'root';
     const DB = 'obra';
 
-//   const HOST = 'localhost';
-//   const USER = 'dreisena';
-//   const PASS = 'd1r34r';
-//   const DB = 'clinicaescolar';
 
     /**
      * Nos permite conectar al motor MySQL con los datos de

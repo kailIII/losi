@@ -1,12 +1,20 @@
 <?php
+
 include_once 'activeRecordInterface.php';
 include_once '../clases/ValueObject/ExpedientesValueObject.php';
+
 /**
  * Description of MysqlExpedientesActiveRecord
  *
  * @author Martin
  */
 class MysqlExpedientesActiveRecord implements ActiveRecord {
+
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
     public function actualizar($oValueObject) {
         $sql = "UPDATE expedientes SET idTipo = " . $oValueObject->getIdTipo()
                 . ", certNro = '" . $oValueObject->getCertNro() . "'"
@@ -23,7 +31,39 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
                 . " WHERE certNro = '" . $oValueObject->getCertNro() . "' "
                 . "AND idObra = " . $oValueObject->getIdObra() . ";";
         $resultado = mysql_query($sql) or die(false);
-        if($resultado){
+        if ($resultado) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
+    public function actualizarCedido($oValueObject) {
+        $sql = "UPDATE expedientes SET cedido = '" . $oValueObject->getCedido() . "'"
+                . " WHERE idExpediente = " . $oValueObject->getIdexpediente() . ";";
+        $resultado = mysql_query($sql) or die(false);
+        if ($resultado) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * @param ExpedientesValueObject $oValueObject
+     * @return boolean
+     */
+    public function finalizar($oValueObject) {
+        $sql = "UPDATE expedientes SET finalizado = 'S'"
+                . " WHERE idExpediente = " . $oValueObject->getIdexpediente() . ";";
+        $resultado = mysql_query($sql) or die(false);
+        if ($resultado) {
             return true;
         } else {
             return false;
@@ -42,7 +82,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscar($oValueObject) {
         $sql = "SELECT * FROM expedientes WHERE idexpediente = " . $oValueObject->getIdexpediente() . ";";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $fila = mysql_fetch_object($resultado);
             $oValueObject = new ExpedientesValueObject();
             $oValueObject->setIdexpediente($fila->idexpediente);
@@ -64,7 +104,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @return boolean|\ExpedientesValueObject
@@ -72,9 +112,9 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarTodo() {
         $sql = "SELECT * FROM expedientes;";
         $resultado = mysql_query($sql);
-        if(mysql_fetch_object($resultado)){
+        if (mysql_fetch_object($resultado)) {
             $aExpedientes = array();
-            while ($fila = mysql_fetch_object($resultado)){
+            while ($fila = mysql_fetch_object($resultado)) {
                 $oExpedientes = new ExpedientesValueObject();
                 $oExpedientes->setIdexpediente($fila->idexpediente);
                 $oExpedientes->setIdObra($fila->idObra);
@@ -98,7 +138,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @param ExpedientesValueObject $oValueObject
@@ -108,7 +148,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
         $sql = "SELECT * FROM expedientes WHERE certNro = '" . $oValueObject->getCertNro() . "' "
                 . "AND idObra = " . $oValueObject->getIdObra() . ";";
         $resultado = mysql_query($sql);
-        if($fila = mysql_fetch_object($resultado)){
+        if ($fila = mysql_fetch_object($resultado)) {
             $oValueObject = new ExpedientesValueObject();
             $oValueObject->setIdexpediente($fila->idexpediente);
             $oValueObject->setIdObra($fila->idObra);
@@ -129,7 +169,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @param ExpedientesValueObject $oValueObject
@@ -138,9 +178,9 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarPorObra($oValueObject) {
         $sql = "SELECT * FROM expedientes WHERE idObra = " . $oValueObject->getIdObra() . ";";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $aExpedientes = array();
-            while ($fila = mysql_fetch_object($resultado)){
+            while ($fila = mysql_fetch_object($resultado)) {
                 $oValueObject = new ExpedientesValueObject();
                 $oValueObject->setIdexpediente($fila->idexpediente);
                 $oValueObject->setIdObra($fila->idObra);
@@ -164,7 +204,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @param ExpedienteValueObject $oValueObject
@@ -173,7 +213,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarPorExpDnv($oValueObject) {
         $sql = "SELECT * FROM expedientes WHERE expDnv = " . $oValueObject->getExpDnv();
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $fila = mysql_fetch_object($resultado);
             $oValueObject->setIdexpediente($fila->idexpediente);
             $oValueObject->setIdObra($fila->idObra);
@@ -194,7 +234,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * El buscarSinfin trae todos los datos que se encuentran en la tabla expediente
      * y los cuales no han sido finalizados.
@@ -202,9 +242,9 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarSinFin() {
         $sql = "SELECT * FROM expedientes WHERE finalizado = 'N';";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $aExpedientes = array();
-            while ($fila = mysql_fetch_object($resultado)){
+            while ($fila = mysql_fetch_object($resultado)) {
                 $oValueObject = new ExpedientesValueObject();
                 $oValueObject->setIdexpediente($fila->idexpediente);
                 $oValueObject->setIdObra($fila->idObra);
@@ -228,7 +268,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @param ExpedientesValueObject $oValueObject
@@ -237,9 +277,9 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function buscarPorExpediente($oValueObject) {
         $sql = "SELECT * FROM expedientes WHERE idexpediente = " . $oValueObject->getIdexpediente() . ";";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $aExpedientes = array();
-            while ($fila = mysql_fetch_object($resultado)){
+            while ($fila = mysql_fetch_object($resultado)) {
                 $oValueObject = new ExpedientesValueObject();
                 $oValueObject->setIdexpediente($fila->idexpediente);
                 $oValueObject->setIdObra($fila->idObra);
@@ -263,7 +303,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     /**
      * 
      * @param ExpedientesValueObject $oValueObject
@@ -273,9 +313,9 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
         $sql = "SELECT * FROM expedientes WHERE finalizado = 'N' "
                 . "ORDER BY idObra, idexpediente;";
         $resultado = mysql_query($sql);
-        if($resultado){
+        if ($resultado) {
             $aExpedientes = array();
-            while ($fila = mysql_fetch_object($resultado)){
+            while ($fila = mysql_fetch_object($resultado)) {
                 $oExpedientes = new ExpedientesValueObject();
                 $oExpedientes->setIdexpediente($fila->idexpediente);
                 $oExpedientes->setIdObra($fila->idObra);
@@ -299,7 +339,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
-    
+
     public function contar() {
         
     }
@@ -319,7 +359,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
     public function guardar($oValueObject) {
         $sql = "INSERT INTO expedientes (idObra, idTipo, certNro, certDnv, "
                 . "expDpv, expDnv, mes, comentario, importe, vencimiento, cedido, finalizado, fechaFirma)";
-        $sql.= " VALUE(" . $oValueObject->getIdObra() ;
+        $sql.= " VALUE(" . $oValueObject->getIdObra();
         $sql.= ", " . $oValueObject->getIdTipo();
         $sql.= ", '" . $oValueObject->getCertNro() . "'";
         $sql.= ", '" . $oValueObject->getCertDnv() . "'";
@@ -335,10 +375,10 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
         $sql.=");";
 //        $resultado = mysql_query($sql) or die(mysql_error());
         $resultado = mysql_query($sql) or die(false);
-        if($resultado){
+        if ($resultado) {
             $result = mysql_query("SELECT DISTINCT LAST_INSERT_ID() FROM expediente");
             $id = mysql_fetch_array($result);
-            if($id[0]<>0) {
+            if ($id[0] <> 0) {
                 $oValueObject->setIdexpediente($id[0]);
                 return true;
             } else {
@@ -348,4 +388,5 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
             return false;
         }
     }
+
 }
