@@ -26,7 +26,7 @@ class MysqlExpHistoriaActiveRecord implements ActiveRecord {
      */
     public function buscar($oValueObject) {
 //        $sql = "SELECT idexpediente, DATE_FORMAT(fecha, '%d/%m/%Y') as fecha, dependencia, comentario "
-        $sql = "SELECT idexpediente, DATE_FORMAT(fecha, '%Y-%m-%d') as fecha, dependencia, comentario "
+        $sql = "SELECT idexpediente, DATE_FORMAT(fecha, '%Y-%m-%d') as fecha, dependencia, comentario, DATEDIFF(now(), fecha) as diferencia "
                 . "FROM exphistoria WHERE idexpediente = " 
                 . $oValueObject->getIdexpediente()
                 . " ORDER BY fecha DESC;";
@@ -39,6 +39,7 @@ class MysqlExpHistoriaActiveRecord implements ActiveRecord {
                 $oExpediente->setFecha($fila->fecha);
                 $oExpediente->setDependencia($fila->dependencia);
                 $oExpediente->setComentario($fila->comentario);
+                $oExpediente->setDiferencia($fila->diferencia);
                 $aExpediente[] = $oExpediente;
                 unset($oExpediente);
             }

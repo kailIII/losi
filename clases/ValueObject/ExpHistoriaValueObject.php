@@ -1,12 +1,23 @@
 <?php
+
 /**
  * Description of ExpHistoriaValueObject
  *
  * @author Martin
  */
 class ExpHistoriaValueObject {
+
     private $idexpediente, $fecha, $dependencia, $comentario;
-    
+    private $diferencia;
+
+    public function getDiferencia() {
+        return $this->diferencia;
+    }
+
+    public function setDiferencia($diferencia) {
+        $this->diferencia = $diferencia;
+    }
+
     public function getIdexpediente() {
         return $this->idexpediente;
     }
@@ -38,4 +49,5 @@ class ExpHistoriaValueObject {
     public function setComentario($comentario) {
         $this->comentario = $comentario;
     }
+
 }
