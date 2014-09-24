@@ -13,7 +13,7 @@ include_once '../inicio/valido.php';
         <script type="text/javascript" src="js/funciones.js"></script>
     </head>
     <body>
-        <?php include_once "../includes/php/header.php";?>
+        <?php include_once "../includes/php/header.php"; ?>
         <div class="container">
             <form class="form-horizontal">
                 <legend>Expedientes de obra</legend>
@@ -29,16 +29,17 @@ include_once '../inicio/valido.php';
                         <select name="nombreobra" id="nombreobra" class="select-block" >
                             <?php
                             foreach ($oObra as $aObra) {
-                            echo "<option value='" . $aObra->getID() . "'>"
-                                    . utf8_decode($aObra->getDenominacion()) . "</option>";
+                                echo "<option value='" . $aObra->getID() . "'>"
+                                . utf8_decode($aObra->getDenominacion()) . "</option>";
                             }
                             ?>
                         </select>
                     </div>
                     <div class="col-lg-1">
                         <br />
-                        <a href="../obras" title="Nueva Obra">
-                            <img src="../images/todo/done-2x.png" alt="Nueva Obra"/>
+                        <a type="button" class="btn btn-primary btn-sm" href="../obras">
+                            <span class="glyphicon glyphicon-plus" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);"
+                                  title="Nueva Obra" alt="Nueva Obra"></span>
                         </a>
                     </div>
                 </div>
@@ -81,11 +82,12 @@ include_once '../inicio/valido.php';
                     <div class="col-lg-3">
                         <label class="label-success label">Tipo de certificado</label><br />
                         <select name="tipocertf" id="tipocertf" class="select-block" value="Comun">
-                              <option value="1">Comun</option>
-                              <option value="2">Provisorio</option>
-                              <option value="3">Definitivo</option>
-                              <option value="4">DYC</option>
-                              <option value="5">Bis</option>
+                            <option value="0">Seleccione</option>
+                            <option value="1">Comun</option>
+                            <option value="2">Provisorio</option>
+                            <option value="3">Definitivo</option>
+                            <option value="4">DYC</option>
+                            <option value="5">Bis</option>
                         </select>
                     </div>
                 </div>
@@ -109,7 +111,7 @@ include_once '../inicio/valido.php';
                 </div>
             </form>
         </div>
-        <?php include_once "../includes/php/footer.php";?>
-        <?php include_once "../includes/php/flatui_js.php";?>
+        <?php include_once "../includes/php/footer.php"; ?>
+        <?php include_once "../includes/php/flatui_js.php"; ?>
     </body>
 </html>

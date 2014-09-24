@@ -22,35 +22,30 @@ $oExpedientes->setCedido($_POST['cedidoExpediente']);
 $oExpedientes->setFinalizado('N');
 $oExpedientes->setFechaFirma($_POST['fechaFirma']);
 
-
 /* Grabacion del expediente. */
-if($oMysqlExpedientes->existe($oExpedientes)){
-    if(!$oMysqlExpedientes->actualizar($oExpedientes)){
+if ($oMysqlExpedientes->existe($oExpedientes)) {
+    if (!$oMysqlExpedientes->actualizar($oExpedientes)) {
         $error = 1;
     }
 } else {
-    if(!$oMysqlExpedientes->guardar($oExpedientes)){
+    if (!$oMysqlExpedientes->guardar($oExpedientes)) {
         $error = 2;
     }
 }
-if($error == 0){
+if ($error == 0) {
     mysql_query("COMMIT;");
     ?>
-    <div class="form-group has-success">
-        <div class="col-xs6">
-            <input type="text" value="Los Datos Se Grabaron Correctamente" class="form-control">
-            <span class="input-icon fui-check-inverted"></span>
-        </div>
+    <div class="row has-success">
+        <input type="text" value="Los Datos Se Grabaron Correctamente" class="form-control">
+        <span class="input-icon fui-check-inverted"></span>
     </div>
     <?php
 } else {
     mysql_query("ROLLBACK;");
     ?>
-    <div class="form-group has-error">
-        <div class="col-xs6">
-            <input type="text" value="Los Datos No Han Sido Almacenados" class="form-control">
-            <span class="input-icon fui-check-inverted"></span>
-        </div>
+    <div class="row has-error">
+        <input type="text" value="Los Datos No Han Sido Almacenados" class="form-control">
+        <span class="input-icon fui-check-inverted"></span>
     </div>
     <?php
 }

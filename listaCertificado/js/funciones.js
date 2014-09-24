@@ -1,11 +1,11 @@
-function objetoAjax(){
-    var xmlhttp=false;
+function objetoAjax() {
+    var xmlhttp = false;
     try {
         xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    } catch(e) {
+    } catch (e) {
         try {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        } catch(E) {
+        } catch (E) {
             xmlhttp = false;
         }
     }
@@ -15,12 +15,12 @@ function objetoAjax(){
     return xmlhttp;
 }
 
-function cambio(){
+function cambio() {
     var comitente = '0';
     var comitentes = document.getElementsByName('comitente');
-    for (i = 1;i <= comitentes.length; i++){
-        if(document.getElementById('comitente'+i).checked){
-            if(comitente.length === 0){
+    for (i = 1; i <= comitentes.length; i++) {
+        if (document.getElementById('comitente' + i).checked) {
+            if (comitente.length === 0) {
                 comitente = i;
             } else {
                 comitente = comitente + ', ' + i;
@@ -28,20 +28,37 @@ function cambio(){
         }
     }
     var divResultado = document.getElementById('listado');
-    
-    ajax=objetoAjax();
-    if(comitente === '0') {
-        ajax.open("POST", "todo.php" ,true);
+
+    ajax = objetoAjax();
+    if (comitente === '0') {
+        ajax.open("POST", "todo.php", true);
     } else {
-        ajax.open("POST", "procesoBusqueda.php" ,true);
+        ajax.open("POST", "procesoBusqueda.php", true);
     }
-    ajax.onreadystatechange=function() {
+    ajax.onreadystatechange = function () {
         if (ajax.readyState === 1) {
 //            divResultado.innerHTML= '<center><img src="../imag1es/cargando.gif"><br/>Guardando los datos...</center>';
         } else if (ajax.readyState === 4) {
             divResultado.innerHTML = ajax.responseText;
         }
     };
-    ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-    ajax.send("comitente="+comitente);
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("comitente=" + comitente);
+}
+
+function filtro() {
+    var idobra = document.getElementById('filtro_hidden').value;
+    var divResultado = document.getElementById('listado');
+
+    ajax = objetoAjax();
+    ajax.open("POST", "procesoFiltro.php", true);
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 1) {
+            divResultado.innerHTML= 'Filtrando datos ...';
+        } else if (ajax.readyState === 4) {
+            divResultado.innerHTML = ajax.responseText;
+        }
+    };
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("idobra=" + idobra);
 }

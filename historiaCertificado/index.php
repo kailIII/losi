@@ -67,10 +67,16 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                                 </div>
                                 <div class="col-md-2">
                                     <div class="col-md-6">
-                                        <img src="../images/todo/done.png" title="Almacenar cedido" alt="Almacenar cedido" onclick="almacenarCedido(<?php echo $_GET['id']; ?>);"/>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                            <span  class="glyphicon glyphicon-ok" onclick="almacenarCedido(<?php echo $_GET['id']; ?>);" title="Almacenar cedido" alt="Almacenar cedido"></span>
+                                        </button>
+                                        <!--<img src="../images/todo/done.png" title="Almacenar cedido" alt="Almacenar cedido" onclick="almacenarCedido(<?php // echo $_GET['id'];   ?>);"/>-->
                                     </div>
                                     <div class="col-md-6">
-                                        <img src="../images/todo/done1.png" title="Finalizar expediente" alt="Finalizar expediente" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);"/>
+                                        <button type="button" class="btn btn-danger btn-sm">
+                                        <!--<img src="../images/todo/done1.png" title="Finalizar expediente" alt="Finalizar expediente" onclick="finalizarExpediente(<?php // echo $_GET['id'];  ?>);"/>-->
+                                            <span class="glyphicon glyphicon-circle-arrow-down" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);" title="Almacenar cedido" alt="Almacenar cedido"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -82,12 +88,15 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
             <div class="row" id="Nueva" style="display: none;">
                 <div class="row">
                     <div class="col-sm-4 col-lg-4">
+                        <label class="label-success label">Fecha</label>
                         <input class="form-control" data-toggle="tooltip" name="fechaNueva" id="fechaNueva" title="Fecha" alt="Fecha" type="date" value="<?php echo date('Y-m-d'); ?>" />
                     </div>
                     <div class="col-sm-2 col-lg-2">
                     </div>
                     <div class="col-sm-6 col-lg-6">
+                        <label class="label-success label">Dependencia</label>
                         <select id="depenNueva" name="depenNueva" class="select-block" >
+                            <option value="0">Seleccione una dependencia</option>
                             <?php
                             foreach ($oDependencia as $aDependencia) {
                                 if ($aDependencia->getDependencia() != '') {
@@ -126,7 +135,7 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                 $oExpHistoria->setIdexpediente($oExpedientes[0]->getIdexpediente());
                 $oExpHistoria = $oMysqlExpHistoria->buscar($oExpHistoria);
                 ?>
-                <legend>Hitorico</legend>
+                <legend>Historico</legend>
                 <table class="table table-striped table-bordered table-hover">
                     <tr>
                         <th>Fecha</th>

@@ -107,7 +107,7 @@ $nuevo = true;
                 <td><?php echo $aExpedientes->getMes(); ?></td>
                 <td><?php echo $dependencia[$dependenciaActual][0]; ?></td>
                         <!--<td><?php // echo $expediente->getComentario();  ?></td>-->
-                <td class="col-sm-1">$ <?php echo $aExpedientes->getImporte();
+                <td class="col-sm-1">$ <?php echo (float) (string) ($aExpedientes->getImporte());
         $total += $aExpedientes->getImporte(); ?></td>
                 <td><?php echo $aExpedientes->getVencimiento(); ?></td>
                 <?php if ((($dias * 100) / 7) < 50) $progreso = 'progress-bar-susses'; ?>

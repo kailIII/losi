@@ -23,18 +23,19 @@ foreach ($oDependencia as $auxDep) {
 $totalfinal = 0;
 $total = 0;
 $oObra = new ObrasEjecutadasValueObject();
-$oObra->setIdcomitente($_POST['comitente']);
-$oObra = $oMysqlObras->buscarComitente($oObra);
+$oObra->setID($_POST['idobra']);
+$oObra = $oMysqlObras->buscar($oObra);
+
 ?>
 <div class="form-group col-lg-12">
     <?php
-    foreach ($oObra as $aObra) {
-        if($oMysqlObras->comprueba($aObra) >= 1){
+//    foreach ($oObra as $oObra) {
+        if($oMysqlObras->comprueba($oObra) >= 1){
         ?>
         <table class="table table-striped table-bordered table-hover">
             <tr>
                 <td colspan="10" class="success">
-                    <?php echo utf8_encode($aObra->getDenominacion() . ' -- ' . $aObra->getExpPrincipal()); ?>
+                    <?php echo utf8_encode($oObra->getDenominacion() . ' -- ' . $oObra->getExpPrincipal()); ?>
                 </td>
             </tr>
             <tr>
@@ -52,7 +53,7 @@ $oObra = $oMysqlObras->buscarComitente($oObra);
             <?
             unset($oExpedientes);
             $oExpedientes = new ExpedientesValueObject();
-            $oExpedientes->setIdObra($aObra->getID());
+            $oExpedientes->setIdObra($oObra->getID());
             $oExpedientes = $oMysqlExpedientes->buscarPorObra($oExpedientes);
             $total = 0;
             foreach ($oExpedientes as $aExpedientes) {
@@ -130,7 +131,7 @@ $oObra = $oMysqlObras->buscarComitente($oObra);
         </table>
         <?php
         }
-    }
+//    }
 
     ?>
     <div class="form-group col-lg-3" style="float: right;">

@@ -18,6 +18,7 @@ $oMysql->conectar();
         <title>Expediente - Certificados</title>
         <?php include_once "../includes/php/estilos.php"; ?>
         <script type="text/javascript" src="js/funciones.js"></script>
+        
     </head>
     <body>
         <?php
@@ -27,46 +28,27 @@ $oMysql->conectar();
          * dado que con uno se controlara la cantidad de expedientes de una obra y con el otro
          * la cantidad de obras que hay en la base.
          */
-        
-//        $oMysqlExpediente = $oMysql->getExpedienteActiveRecord();
-
-        /* Busco los expediente.idCertificacion y los agrego a una lista para 
-         * poder buscar los nombres de las obras y poder recorrerlo. */
-//        $oExpedientes = $oMysqlExpediente->buscarIdCertificaciones();
-//        $lista = '';
-//        foreach ($oExpedientes as $expediente) {
-//            $lista .= $expediente->getIdCertificacion().',';
-//        }
-//        $lista = substr($lista, 0, strlen($lista)-1);
-//        $lista = explode(',', $lista);
-        /* En $lista poseo los idCertificacion. */
-        
-//        $oMysqlObra = $oMysql->getObrasEjecutadasActiveRecord();
-//        $oMysqlCertificacion = $oMysql->getCertificacionActiveRecord();
-//        include_once '../clases/ValueObject/CertificacionValueObject.php';
-//        $oCertificacion = new CertificacionValueObject();
-
-        /* Cargo todas las dependencias para poder consultarlas cuando necesite. */
-//        $dependencia = array();
-//        $oMysqlDependencia = $oMysql->getDependenciaActiveRecord();
-//        $oDependencia = new DependenciaValueObject();
-//        $oDependencia = $oMysqlDependencia->buscarTodo();
-//        foreach ($oDependencia as $auxDep) {
-//            $dependencia[$auxDep->getIddependencia()] = $auxDep->getDependencia();
-//        }
-//        $totalfinal = 0;
         ?>
         <div class="container">
-            <div class="form-group">
-                <div class="col-lg-9"></div>
-                <div class="col-lg-3">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="filtro" name="filtro" placeholder="Filtro de Obra" 
+                           data-toggle="tooltip" title="Filtro de Obra" alt="Filtro de Obra"
+                           onkeyup="ajax_showOptionsFiltro(this, 'getFiltroByLetters', event);" />
+                    <input type="hidden" name="filtro_ID" id="filtro_hidden" value="" />
+                </div>
+                <div class="col-lg-2">
+                    <a href="#" class="btn btn-large btn-block btn-primary" onclick="filtro()">Filtrar</a>
+                </div>
+                <div class="col-lg-2">
                     <a href="../historiaCertificado/actualizacion.php" class="btn btn-large btn-block btn-primary">Actualizar</a>
                 </div>
             </div>
+            <br>
             <legend>Certificados</legend>
             <div class="panel panel-default">
-              <div class="panel-heading">Filtro por comitente</div>
-              <div class="panel-body">
+                <div class="panel-heading">Filtro por comitente</div>
+                <div class="panel-body">
                     <?php
                     $oMysqlComitente = $oMysql->getComitenteActiveRecord();
                     $oComitente = new ComitenteValueObject();
@@ -79,14 +61,16 @@ $oMysql->conectar();
                         <?php
                     }
                     ?>
-              </div>
+                </div>
             </div>                               
             <div id="listado">
-                <?php include './todo.php';?>
+                <?php include 'todo.php'; ?>
             </div>
         </div>
         <div id="divResultado"></div>
-        <?php include_once "../includes/php/footer.php";?>
-        <?php include_once "../includes/php/flatui_js.php";?>
+        <?php include_once "../includes/php/footer.php"; ?>
+        <?php include_once "../includes/php/flatui_js.php"; ?>
+        <script src="js/ajax-dynamic-list.js" type="text/javascript"></script>
+        <script src="js/ajax.js" type="text/javascript"></script>
     </body>
 </html>

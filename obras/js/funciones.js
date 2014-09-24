@@ -16,11 +16,16 @@ function objetoAjax(){
 }
 
 function guardarDatos(){
+    if(document.getElementById('guardar').value === 'Aceptar'){
+        window.location.href="../certificados";
+        return true;
+    }
     var identificador = document.getElementById('identificador').value;
     var denominacion = document.getElementById('denominacion').value;
     var comitente = document.getElementById('comitente').value;
     var fecha = document.getElementById('fecha').value;
     var expediente = document.getElementById('expediente').value;
+    var importe = document.getElementById('importe').value;
     
     var divResultado = document.getElementById('resultado');
     
@@ -31,12 +36,14 @@ function guardarDatos(){
             divResultado.innerHTML= '<img src="../images/cargando.gif"><br/>Guardando los datos...';
         } else if (ajax.readyState === 4) {
             divResultado.innerHTML = ajax.responseText;
+            document.getElementById('guardar').value = 'Aceptar';
         }
     };
     ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 
     ajax.send("identificador="+identificador+"&denominacion="+denominacion
-        +"&comitente="+comitente+"&expediente="+expediente+"&fecha="+fecha);
+        +"&comitente="+comitente+"&expediente="+expediente+"&fecha="+fecha
+        +"&importe="+importe);
 }
 
 function soloFecha(evt){

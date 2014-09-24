@@ -176,7 +176,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
      * @return boolean
      */
     public function buscarPorObra($oValueObject) {
-        $sql = "SELECT * FROM expedientes WHERE idObra = " . $oValueObject->getIdObra() . ";";
+        $sql = "SELECT * FROM expedientes WHERE finalizado = 'N' AND idObra = " . $oValueObject->getIdObra() . ";";
         $resultado = mysql_query($sql);
         if ($resultado) {
             $aExpedientes = array();
@@ -373,8 +373,7 @@ class MysqlExpedientesActiveRecord implements ActiveRecord {
         $sql.= ", '" . $oValueObject->getFinalizado() . "'";
         $sql.= ", '" . $oValueObject->getFechaFirma() . "'";
         $sql.=");";
-//        $resultado = mysql_query($sql) or die(mysql_error());
-        $resultado = mysql_query($sql) or die(false);
+        $resultado = mysql_query($sql);
         if ($resultado) {
             $result = mysql_query("SELECT DISTINCT LAST_INSERT_ID() FROM expediente");
             $id = mysql_fetch_array($result);

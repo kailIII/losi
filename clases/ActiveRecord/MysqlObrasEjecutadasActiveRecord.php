@@ -214,6 +214,30 @@ class MysqlObrasEjecutadasActiveRecord implements ActiveRecord{
             return FALSE;
         }
     }
+    /**
+     * 
+     * @param ObrasEjecutadasValueObject $oValueObject
+     * @return boolean
+     */
+    public function buscarPorDenominacion($oValueObject) {
+        $sql = "SELECT ID, denominacion FROM obrasejecutadas";
+        $sql .= " WHERE denominacion Like '%".$oValueObject->getDenominacion()."%';";
+
+        $resultado = mysql_query($sql);
+        if($resultado){
+            $aObras = array();
+            while ($fila = mysql_fetch_object($resultado)){
+                $oValueObject = new ObrasEjecutadasValueObject();
+                $oValueObject->setID($fila->ID);
+                $oValueObject->setDenominacion($fila->denominacion);
+                $aObras[] = $oValueObject;
+                unset($oValueObject);
+            }
+            return $aObras;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
      * 
@@ -459,12 +483,14 @@ class MysqlObrasEjecutadasActiveRecord implements ActiveRecord{
      * @return boolean
      */
     public function guardarNombre($oValueObject) {
-        $sql = "INSERT INTO obrasejecutadas (id, denominacion, idcomitente, expPrincipal, fechaInicio) VALUES(" 
+        $sql = "INSERT INTO obrasejecutadas (id, denominacion, idcomitente, expPrincipal, "
+                . "fechaInicio, montoContractualOriginal) VALUES(" 
                 . $oValueObject->getID() . ", '"
                 . utf8_decode($oValueObject->getDenominacion()) ."', "
                 . $oValueObject->getIdcomitente() . ", '"
                 . $oValueObject->getExpPrincipal() . "', '"
-                . $oValueObject->getFechaInicio() . "');";
+                . $oValueObject->getFechaInicio() . "', '"
+                . $oValueObject->getMontoContractualOriginal() . "');";
         $resultado = mysql_query($sql);
 //        or die(mysql_error());
         if($resultado){
