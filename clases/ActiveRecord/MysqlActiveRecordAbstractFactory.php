@@ -33,15 +33,15 @@ class MysqlActiveRecordAbstractFactory extends ActiveRecordAbstractFactory {
         return parent::getActiveRecordFactory($motor);
     }
 
-//    const HOST = 'mysql10.000webhost.com';
-//    const USER = 'a9451622_losisa';
-//    const PASS = 'T1nch0_losi';
-//    const DB = 'a9451622_losisa';
-    
     const HOST = 'localhost';
-    const USER = 'root';
-    const PASS = 'root';
-    const DB = 'obra';
+    const USER = 'luislosi_obra';
+    const PASS = 'Lu1sl0s1_0br4';
+    const DB = 'luislosi_obra';
+    
+//    const HOST = 'localhost';
+//    const USER = 'root';
+//    const PASS = 'root';
+//    const DB = 'obra';
 
 
     /**

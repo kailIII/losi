@@ -60,22 +60,31 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                             <td><?php echo $oExpedientes[0]->getVencimiento(); ?></td>
                         </tr>
                         <tr>
-                            <th>Cedido</th>
-                            <td colspan="6">
-                                <div class="col-md-10">
-                                    <input class="form-control" data-toggle="tooltip" name="cedido" id="cedido" title="Cedido" alt="Cedido" type="text" value="<?php echo $oExpedientes[0]->getCedido(); ?>" />
+                            <td colspan="7">
+                                <strong> Cedido:
+                                    <?php echo $oExpedientes[0]->getCedido(); ?>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="col-md-9">
+                                    <input class="form-control" data-toggle="tooltip" name="cedido" id="cedido" title="" alt="" type="text" value="" />
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <button type="button" class="btn btn-success btn-sm">
                                             <span  class="glyphicon glyphicon-ok" onclick="almacenarCedido(<?php echo $_GET['id']; ?>);" title="Almacenar cedido" alt="Almacenar cedido"></span>
                                         </button>
-                                        <!--<img src="../images/todo/done.png" title="Almacenar cedido" alt="Almacenar cedido" onclick="almacenarCedido(<?php // echo $_GET['id'];   ?>);"/>-->
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-success btn-sm">
+                                            <span  class="glyphicon glyphicon-list" onclick="almacenarComentario(<?php echo $_GET['id']; ?>);" title="Almacenar comentario" alt="Almacenar comentario"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
                                         <button type="button" class="btn btn-danger btn-sm">
-                                        <!--<img src="../images/todo/done1.png" title="Finalizar expediente" alt="Finalizar expediente" onclick="finalizarExpediente(<?php // echo $_GET['id'];  ?>);"/>-->
-                                            <span class="glyphicon glyphicon-circle-arrow-down" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);" title="Almacenar cedido" alt="Almacenar cedido"></span>
+                                            <span class="glyphicon glyphicon-circle-arrow-down" onclick="finalizarExpediente(<?php echo $_GET['id']; ?>);" title="Finalizar expediente" alt="Finalizar expediente"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -116,6 +125,7 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                 </div>
             </div>
             <br/>
+
             <div class="row">
                 <div class="col-sm-3">
                     <!--<input type="button" value="Guardar" class="btn btn-large btn-block btn-primary" onclick="guardarDatos()" id="accion" />-->
@@ -127,6 +137,8 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                     <div id="divResultado" style="animation: fadein 1s;"></div>
                 </div>
             </div>
+            <br>
+
             <div class="row table-responsive">
                 <?php
                 /* Ahora tengo que mostrar el historial del expediente. */
@@ -159,13 +171,25 @@ $oDependencia = $oMysqlDependencia->buscarTodo();
                         }
                         ?>
                         <tr>
-                            <td><?php echo $historia->getFecha(); ?></td>
-                            <td><?php echo $oDependencia->getDependencia(); ?></td>
-                            <td><?php echo $historia->getComentario(); ?></td>
+                            <?php
+                            if ($oDependencia->getDependencia() == 'comentario') {
+                                ?>
+                                <td><?php echo $historia->getFecha(); ?></td>                                
+                                <td colspan="2"><?php echo $historia->getComentario(); ?></td>
+                                <?php
+                            } else {
+                                ?>
+                                <td><?php echo $historia->getFecha(); ?></td>
+                                <td><?php echo $oDependencia->getDependencia(); ?></td>
+                                <td><?php echo $historia->getComentario(); ?></td>
+                                <?php
+                            }
+                            ?>
                         </tr>
                         <?php
-                        if ($dependencia === '')
+                        if ($dependencia === '' && $oDependencia->getDependencia() != 'comentario') {
                             $dependencia = $oDependencia->getDependencia();
+                        }
                     }
                     ?>
                 </table>

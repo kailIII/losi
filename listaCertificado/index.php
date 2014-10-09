@@ -18,7 +18,7 @@ $oMysql->conectar();
         <title>Expediente - Certificados</title>
         <?php include_once "../includes/php/estilos.php"; ?>
         <script type="text/javascript" src="js/funciones.js"></script>
-        
+
     </head>
     <body>
         <?php
@@ -44,10 +44,21 @@ $oMysql->conectar();
                     <a href="../historiaCertificado/actualizacion.php" class="btn btn-large btn-block btn-primary">Actualizar</a>
                 </div>
             </div>
+            
+
             <br>
             <legend>Certificados</legend>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active">
+                    <a href="#">Filtro por comitente</a>
+                </li>
+                <li>
+                    <a href="#">Filtro por obra</a>
+                </li>
+            </ul>
+            
             <div class="panel panel-default">
-                <div class="panel-heading">Filtro por comitente</div>
+                <!--<div class="panel-heading">Filtro por comitente</div>-->
                 <div class="panel-body">
                     <?php
                     $oMysqlComitente = $oMysql->getComitenteActiveRecord();

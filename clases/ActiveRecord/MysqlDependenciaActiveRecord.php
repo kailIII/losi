@@ -74,7 +74,6 @@ class MysqlDependenciaActiveRecord implements ActiveRecord{
     public function buscarDependencia($oValueObject) {
         $sql ="SELECT iddependencia, dependencia, dias, orden FROM dependencia "
                 . " WHERE dependencia = '" . $oValueObject->getDependencia() ."';";
-        
         $resultado = mysql_query($sql);
         $resultado = mysql_fetch_object($resultado);
         if($resultado){

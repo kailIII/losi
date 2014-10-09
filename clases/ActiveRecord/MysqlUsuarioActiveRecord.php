@@ -68,7 +68,7 @@ class MysqlUsuarioActiveRecord implements ActiveRecord{
         $sql .= " WHERE u.identificador = '".$oValueObject->getIdentificador()."'";
         $sql .= " AND u.clave = md5('".$oValueObject->getClave()."');";
         $resultado = mysql_query($sql);
-        echo $sql ."<br>";
+//        echo $sql ."<br>";
 //        var_dump($resultado);
         $fila = mysql_fetch_object($resultado);
         if($fila){

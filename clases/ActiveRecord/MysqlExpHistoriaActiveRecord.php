@@ -98,6 +98,7 @@ class MysqlExpHistoriaActiveRecord implements ActiveRecord {
                 . "'" . $oValueObject->getDependencia() . "', "
                 . "'" . $oValueObject->getComentario() . "'"
                 . ")";
+        
         if(mysql_query($sql)){
             return TRUE;
         } else {

@@ -24,7 +24,7 @@ function busquedaExpediente(expediente) {
 //    divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
     ajax = objetoAjax();
     ajax.open("POST", "busqueda.php", true);
-    ajax.onreadystatechange = function() {
+    ajax.onreadystatechange = function () {
         if (ajax.readyState === 1) {
 //            divResultado.innerHTML = '<center><img src="../images/todo/preload.GIF"><br/>Actualizando los datos...</center>';
         } else if (ajax.readyState === 4) {
@@ -44,7 +44,7 @@ function busquedaExpediente(expediente) {
                     fecha[1] = '0' + fecha[1];
                 }
                 document.getElementById('fecha').innerHTML = fecha[2] + "-" + fecha[1] + "-" + fecha[0];
-                document.getElementById('actual').style.display = 'inline';
+//                document.getElementById('actual').style.display = 'initial';
                 guardarDatos();
             }
             document.getElementById('accion').innerHTML = 'Agregar';
@@ -96,57 +96,77 @@ function habilita(id) {
 }
 
 function guardarDatos() {
+    if (document.getElementById('accion').innerHTML === 'Aceptar') {
+        window.location.reload();
+        return true;
+    }
     if (document.getElementById('accion').innerHTML === 'Agregar') {
         agregarDependencia();
         return true;
     }
+    
     if (document.getElementById('accion').innerHTML === 'Volver') {
-        window.location="../listaCertificado";;
+        window.location = "../listaCertificado";
+        ;
         return true;
     }
-    /* Busco los datos relacionados con el historial del expediente. */
-    var comen = document.getElementById('comen').innerHTML;
-    var depen = document.getElementById('depen').innerHTML;
-    var fecha = document.getElementById('fecha').innerHTML;
-    var idexp = document.getElementById('idexpe').value;
-    var divResultado = document.getElementById('divResultado');
+    var vialidad = '';
+    if (document.getElementById('Nueva').style.display !== 'initial') {
+        /* Busco los datos relacionados con el historial del expediente. */
+        var comen = document.getElementById('comen').innerHTML,
+                depen = document.getElementById('depen').innerHTML,
+                fecha = document.getElementById('fecha').innerHTML,
+                idexp = document.getElementById('idexpe').value,
+                divResultado = document.getElementById('divResultado');
 
-    /* Busco los datos que se grabaran en la tabla vialidad. */
-    var identificador = document.getElementById('h_01').value;
-    var tipotramite = document.getElementById('h_02').value;
-    var tema = document.getElementById('h_03').value;
-    var fechaalta = document.getElementById('h_04').value;
-    var fechaalta_ = fechaalta.split('/');
-    fechaalta = fechaalta_[2] + '-' + fechaalta_[1] + '-' + fechaalta_[0];
-    var extracto = document.getElementById('h_05').value;
-    var estado = document.getElementById('h_06').value;
-    var organismoa = document.getElementById('h_07').value;
-    var dependenciaa = document.getElementById('h_08').value;
-    var organismod = document.getElementById('h_09').value;
-    var dependenciad = document.getElementById('h_10').value;
-    var conformado = document.getElementById('h_11').value;
-    var vialidad = "&identificador=" + identificador + "&tipotramite=" + tipotramite
-            + "&tema=" + tema + "&fechaalta=" + fechaalta
-            + "&extracto=" + extracto + "&estado=" + estado
-            + "&organismoa=" + organismoa + "&dependenciaa=" + dependenciaa
-            + "&organismod=" + organismod + "&dependenciad=" + dependenciad
-            + "&conformado=" + conformado;
-    /* Fin de la recoleccion de los datos. */
-
+        /* Busco los datos que se grabaran en la tabla vialidad. */
+        var identificador = document.getElementById('h_01').value,
+                tipotramite = document.getElementById('h_02').value,
+                tema = document.getElementById('h_03').value,
+                fechaalta = document.getElementById('h_04').value,
+                fechaalta_ = fechaalta.split('/'),
+                fechaalta = fechaalta_[2] + '-' + fechaalta_[1] + '-' + fechaalta_[0],
+                extracto = document.getElementById('h_05').value,
+                estado = document.getElementById('h_06').value,
+                organismoa = document.getElementById('h_07').value,
+                dependenciaa = document.getElementById('h_08').value,
+                organismod = document.getElementById('h_09').value,
+                dependenciad = document.getElementById('h_10').value,
+                conformado = document.getElementById('h_11').value;
+        vialidad = "&identificador=" + identificador + "&tipotramite=" + tipotramite
+                + "&tema=" + tema + "&fechaalta=" + fechaalta
+                + "&extracto=" + extracto + "&estado=" + estado
+                + "&organismoa=" + organismoa + "&dependenciaa=" + dependenciaa
+                + "&organismod=" + organismod + "&dependenciad=" + dependenciad
+                + "&conformado=" + conformado;
+        /* Fin de la recoleccion de los datos. */
+    } else {
+        var comen = document.getElementById('comenNueva').value,
+                depen = document.getElementById('depenNueva').options[document.getElementById('depenNueva').selectedIndex].text,
+                fecha = document.getElementById('fechaNueva').value,
+                idexp = document.getElementById('idexpe').value,
+                divResultado = document.getElementById('divResultado');
+    }
     ajax = objetoAjax();
     //usando del medoto POST archivo que realizará la operacion
     ajax.open("POST", "guardarDatos.php", true);
-    ajax.onreadystatechange = function() {
+    ajax.onreadystatechange = function () {
         if (ajax.readyState === 1) {
 //            divResultado.innerHTML= '<center><img src="../imag1es/cargando.gif"><br/>Guardando los datos...</center>';
         } else if (ajax.readyState === 4) {
             //mostrar los nuevos registros en esta capa
             divResultado.innerHTML = ajax.responseText;
+            document.getElementById('accion').innerHTML = 'Aceptar';
         }
     };
     //muy importante este encabezado ya que hacemos uso de un formulario
     ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     //enviando los valores
+    alert("idexpediente=" + idexp
+            + "&fecha=" + fecha
+            + "&dependencia=" + depen
+            + "&comentario=" + comen
+            + vialidad);
     ajax.send("idexpediente=" + idexp
             + "&fecha=" + fecha
             + "&dependencia=" + depen
@@ -164,7 +184,7 @@ function actualizarExpediente(expediente, i) {
     if (expediente.indexOf('/') !== -1) {
         expediente_aux = expediente.split('/');
     }
-    ajax[i].onreadystatechange = function() {
+    ajax[i].onreadystatechange = function () {
         if (ajax[i].readyState === 1) {
 //            divResultado.innerHTML = "<img src='../images/todo/preload.GIF'>";
         }
@@ -186,7 +206,7 @@ function actualizarExpediente(expediente, i) {
 }
 
 function agregarDependencia() {
-    document.getElementById('Nueva').style.display = 'inline';
+    document.getElementById('Nueva').style.display = 'initial';
     document.getElementById('accion').innerHTML = 'Guardar';
 }
 
@@ -195,7 +215,7 @@ function almacenarCedido(idexpe) {
     var divResultado = document.getElementById('divResultado');
     ajax = objetoAjax();
     ajax.open("POST", "almacenarCedido.php", true);
-    ajax.onreadystatechange = function() {
+    ajax.onreadystatechange = function () {
         if (ajax.readyState === 1) {
         } else if (ajax.readyState === 4) {
             divResultado.innerHTML = ajax.responseText;
@@ -205,11 +225,26 @@ function almacenarCedido(idexpe) {
     ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     ajax.send("idexpe=" + idexpe + "&cedido=" + cedido);
 }
+function almacenarComentario(idexpe) {
+    var comentario = document.getElementById('cedido').value;
+    var divResultado = document.getElementById('divResultado');
+    ajax = objetoAjax();
+    ajax.open("POST", "almacenarComentario.php", true);
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 1) {
+        } else if (ajax.readyState === 4) {
+            divResultado.innerHTML = ajax.responseText;
+            document.getElementById('accion').innerHTML = 'Agregar';
+        }
+    };
+    ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    ajax.send("idexpe=" + idexpe + "&comentario=" + comentario);
+}
 function finalizarExpediente(idexpe) {
     var divResultado = document.getElementById('divResultado');
     ajax = objetoAjax();
     ajax.open("POST", "finalizarExpediente.php", true);
-    ajax.onreadystatechange = function() {
+    ajax.onreadystatechange = function () {
         if (ajax.readyState === 1) {
         } else if (ajax.readyState === 4) {
             divResultado.innerHTML = ajax.responseText;
